@@ -1,7 +1,6 @@
 package com.app;
 
 import com.app.auth.AuthenticationFilter;
-import jakarta.servlet.FilterRegistration;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
