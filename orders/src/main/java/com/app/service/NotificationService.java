@@ -29,8 +29,6 @@ public class NotificationService {
 
     public void sendNotification(NotificationTemplate template, Map<String, String> map, User user) {
         Channel channel = user.getChannel();
-        if (channel == null)
-            return;
         String content = template.parseTemplate(map);
         addNotification(content, channel, new Date(System.currentTimeMillis()));
         database.incrementTemplateCounter(template);
@@ -51,7 +49,6 @@ public class NotificationService {
             Notification notification = notificationQueue.poll();
             notification.getChannel().send(notification.getContent());
             System.out.println("Notification sent: " + notification.getContent());
-            System.out.println("Notification sent to: " + ((ChannelDecorator) notification.getChannel()).getAddress());
         }
         System.out.println("No notifications in queue!");
     }

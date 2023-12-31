@@ -1,6 +1,7 @@
 package com.app.model;
 
 import com.app.model.channel.Channel;
+import com.app.model.channel.ConcreteChannel;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -20,7 +21,7 @@ public class User {
     @JsonProperty("balance")
     private Double balance;
 
-    private Channel channel;
+    private Channel channel = new ConcreteChannel();
 
     @JsonCreator
     public User(String username, String password,Double balance) {
