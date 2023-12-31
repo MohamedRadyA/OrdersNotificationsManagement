@@ -40,7 +40,7 @@ public class UserService {
         userDatabase.addUser(user);
         Map<String, String> placeHolders = Map.ofEntries(entry("lang", user.getPreferredLang()),
                 entry("name", user.getUsername()));
-        notificationService.sendNotification(NotificationTemplate.ORDER_SHIPMENT, placeHolders, user);
+        notificationService.sendNotification(NotificationTemplate.USER_CREATION, placeHolders, user);
         return true;
     }
     public Boolean loginUser(User user){
@@ -51,7 +51,7 @@ public class UserService {
         if(dbUser.getPassword().equals(user.getPassword())){
             Map<String, String> placeHolders = Map.ofEntries(entry("lang", user.getPreferredLang()),
                     entry("name", user.getUsername()));
-            notificationService.sendNotification(NotificationTemplate.ORDER_SHIPMENT, placeHolders, user);
+            notificationService.sendNotification(NotificationTemplate.USER_LOGIN, placeHolders, user);
             return true;
         }
         return false;
