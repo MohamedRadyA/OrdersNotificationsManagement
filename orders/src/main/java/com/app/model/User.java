@@ -1,5 +1,7 @@
 package com.app.model;
 
+import com.app.notifications.Channel;
+
 public class User {
     private String username;
 
@@ -13,14 +15,20 @@ public class User {
 
     private double balance;
 
-    //private Channel channel;
-    public User(String username, String password, String phoneNumber, String emailAddress, String preferredLang, double balance) {
+    private Channel channel;
+    public User(String username, String password, double balance) {
+        this.username = username;
+        this.password = password;
+        this.balance = balance;
+    }
+    public User(String username, String password, String phoneNumber, String emailAddress, String preferredLang, double balance, Channel channel) {
         this.username = username;
         this.password = password;
         this.phoneNumber = phoneNumber;
         this.emailAddress = emailAddress;
         this.preferredLang = preferredLang;
         this.balance = balance;
+        this.channel = channel;
     }
 
     public void setUsername(String username) {
@@ -47,9 +55,9 @@ public class User {
         this.balance = balance;
     }
 
-/*    public void setChannel(Channel channel) {
+    public void setChannel(Channel channel) {
         this.channel = channel;
-    }*/
+    }
 
     public String getUsername() {
         return username;
@@ -75,7 +83,7 @@ public class User {
         return balance;
     }
 
-/*    public Channel getChannel() {
+    public Channel getChannel() {
         return channel;
-    }*/
+    }
 }
