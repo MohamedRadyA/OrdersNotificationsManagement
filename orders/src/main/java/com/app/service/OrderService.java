@@ -3,6 +3,7 @@ package com.app.service;
 import com.app.model.Product;
 import com.app.model.notification.NotificationTemplate;
 import com.app.model.order.Order;
+import com.app.model.order.OrderComponent;
 import com.app.model.order.OrderState;
 import com.app.model.order.ProductItem;
 import com.app.model.User;
@@ -76,7 +77,7 @@ public class OrderService {
         if (user.getBalance() < getPrice.apply(order)) {
             return false;
         }
-        for (var item : order.getItems()) {
+        for (OrderComponent item : order.getItems()) {
             if (item instanceof Order) {
                 if (!verifyUsersBalance((Order) item, getPrice)) {
                     return false;
@@ -89,7 +90,7 @@ public class OrderService {
     private Boolean verifyOrdersStatus(Order order) {
         if (order.getState().equals(OrderState.SHIPPED))
             return false;
-        for (var item : order.getItems()) {
+        for (OrderComponent item : order.getItems()) {
             if (item instanceof Order) {
                 if (!verifyOrdersStatus((Order) item)) {
                     return false;
@@ -107,7 +108,7 @@ public class OrderService {
             order.setPlacementDate(new Date(System.currentTimeMillis()));
             user.subtractBalance(order.getPrice());
         }
-        for (var item : order.getItems()) {
+        for (OrderComponent item : order.getItems()) {
             if (item instanceof Order) {
                 placeOrder((Order) item);
             }
@@ -137,7 +138,7 @@ public class OrderService {
 
     private Integer getNumberOfOrders(Order order) {
         Integer cnt = 1;
-        for (var item : order.getItems()) {
+        for (OrderComponent item : order.getItems()) {
             if (item instanceof Order) {
                 cnt += getNumberOfOrders((Order) item);
             }
@@ -151,7 +152,7 @@ public class OrderService {
 
         User user = userDatabase.getUser(order.getBuyerUsername());
         user.subtractBalance(singleOrderFees);
-        for (var item : order.getItems()) {
+        for (OrderComponent item : order.getItems()) {
             if (item instanceof Order) {
                 shipOrder((Order) item, singleOrderFees);
             }
@@ -187,7 +188,7 @@ public class OrderService {
         Double price = order.getPrice();
         User user = userDatabase.getUser(order.getBuyerUsername());
         user.addBalance(price);
-        for (var item : order.getItems()) {
+        for (OrderComponent item : order.getItems()) {
             if (item instanceof Order) {
                 cancelOrderPlacement((Order) item);
             }
@@ -208,7 +209,7 @@ public class OrderService {
 
         User user = userDatabase.getUser(order.getBuyerUsername());
         user.addBalance(singleOrderFees);
-        for (var item : order.getItems()) {
+        for (OrderComponent item : order.getItems()) {
             if (item instanceof Order) {
                 cancelOrderShipping((Order) item, singleOrderFees);
             }
