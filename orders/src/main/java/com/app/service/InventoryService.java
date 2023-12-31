@@ -11,20 +11,32 @@ import java.util.ArrayList;
 import java.util.Map;
 
 @Service
-public class InformationService {
+public class InventoryService {
 
     private final StatisticsDatabase statisticsDatabase;
     private final InventoryDatabase inventoryDatabase;
 
     @Autowired
-    public InformationService(@Qualifier("inMemoryStatisticsDatabase") StatisticsDatabase statisticsDatabase,
-                              @Qualifier("inMemoryInventoryDatabase") InventoryDatabase inventoryDatabase) {
+    public InventoryService(@Qualifier("inMemoryStatisticsDatabase") StatisticsDatabase statisticsDatabase,
+                            @Qualifier("inMemoryInventoryDatabase") InventoryDatabase inventoryDatabase) {
         this.statisticsDatabase = statisticsDatabase;
         this.inventoryDatabase = inventoryDatabase;
     }
 
     public ArrayList<Product> getAllProducts() {
         return inventoryDatabase.getAllProducts();
+    }
+
+    public Product getProduct(String serialNo){
+        return inventoryDatabase.getProduct(serialNo);
+    }
+
+    public Boolean addProduct(Product product){
+        return inventoryDatabase.addProduct(product);
+    }
+    public Boolean increaseStock(String serialNo,Integer quantity){
+        if(quantity < 0)return false;
+        return inventoryDatabase.increaseProductStock(serialNo,quantity);
     }
 
     public Map<String, Integer> getStatistics() {

@@ -37,7 +37,7 @@ public class ProductItem implements OrderComponent {
     public boolean removeChild(OrderComponent component) {
         throw new UnsupportedOperationException("Current operation is not support for this object");
     }
-    
+
     @Override
     public Double getPrice() {
         return price * quantity;

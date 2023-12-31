@@ -17,6 +17,9 @@ public class InMemoryInventoryDatabase implements InventoryDatabase {
     public InMemoryInventoryDatabase() {
         products = new HashMap<>();
         categoryStock = new HashMap<>();
+        for (var cat : Category.values()) {
+            categoryStock.put(cat, 0);
+        }
     }
 
     @Override
@@ -25,14 +28,14 @@ public class InMemoryInventoryDatabase implements InventoryDatabase {
         if (products.containsKey(serialNo)) {
             return false;
         }
-        categoryStock.put(product.getCategory(),categoryStock.get(product.getCategory()) + product.getQuantity());
+        categoryStock.put(product.getCategory(), categoryStock.get(product.getCategory()) + product.getQuantity());
         products.put(serialNo, product);
         return true;
     }
 
     @Override
     public Boolean increaseProductStock(String serialNot, Integer quantity) {
-        if (products.containsKey(serialNot)) {
+        if (!products.containsKey(serialNot)) {
             return false;
         }
         categoryStock.put(products.get(serialNot).getCategory(), categoryStock.get(products.get(serialNot).getCategory()) + quantity);
@@ -42,7 +45,7 @@ public class InMemoryInventoryDatabase implements InventoryDatabase {
 
     @Override
     public Boolean decreaseProductStock(String serialNot, Integer quantity) {
-        if (products.containsKey(serialNot) || products.get(serialNot).getQuantity() < quantity) {
+        if (!products.containsKey(serialNot) || products.get(serialNot).getQuantity() < quantity) {
             return false;
         }
         categoryStock.put(products.get(serialNot).getCategory(), categoryStock.get(products.get(serialNot).getCategory()) - quantity);

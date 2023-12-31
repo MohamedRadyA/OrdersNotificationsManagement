@@ -59,7 +59,8 @@ public class OrderController {
     }
 
     @PostMapping("/cancelplacement")
-    public ResponseEntity<String> cancelOrderPlacement(@RequestBody Integer id) {
+    public ResponseEntity<String> cancelOrderPlacement(@RequestBody Map<String, Object> data) {
+        Integer id = (Integer) data.get("id");
         if (!orderService.cancelOrderPlacement(id)) {
             return ResponseEntity.badRequest().body("Order not cancelled");
         }
@@ -67,15 +68,17 @@ public class OrderController {
     }
 
     @PostMapping("/cancelshipping")
-    public ResponseEntity<String> cancelOrderShipping(@RequestBody Integer id) {
+    public ResponseEntity<String> cancelOrderShipping(@RequestBody Map<String, Object> data) {
+        Integer id = (Integer) data.get("id");
         if (!orderService.cancelOrderShipping(id)) {
             return ResponseEntity.badRequest().body("Order not cancelled");
         }
         return ResponseEntity.ok("Order cancelled");
     }
-
+    
     @PutMapping("/place")
-    public ResponseEntity<String> placeOrder(@RequestBody Integer id) {
+    public ResponseEntity<String> placeOrder(@RequestBody Map<String, Object> data) {
+        Integer id = (Integer) data.get("id");
         if (!orderService.placeOrder(id)) {
             return ResponseEntity.badRequest().body("Order not placed");
         }
@@ -83,7 +86,8 @@ public class OrderController {
     }
 
     @PutMapping("/ship")
-    public ResponseEntity<String> shipOrder(@RequestBody Integer id) {
+    public ResponseEntity<String> shipOrder(@RequestBody Map<String, Object> data) {
+        Integer id = (Integer) data.get("id");
         if (!orderService.shipOrder(id)) {
             return ResponseEntity.badRequest().body("Order not shipped");
         }
