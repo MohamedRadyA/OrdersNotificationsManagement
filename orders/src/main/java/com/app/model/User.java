@@ -21,13 +21,11 @@ public class User {
         this.password = password;
         this.balance = balance;
     }
-    public User(String username, String password, String phoneNumber, String emailAddress, String preferredLang, double balance, Channel channel) {
-        this.username = username;
-        this.password = password;
+    public User(String username, String password, double balance, String phoneNumber, String emailAddress, String preferredLang, Channel channel) {
+        this(username, password, balance);
         this.phoneNumber = phoneNumber;
         this.emailAddress = emailAddress;
         this.preferredLang = preferredLang;
-        this.balance = balance;
         this.channel = channel;
     }
 
