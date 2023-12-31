@@ -49,6 +49,7 @@ public class NotificationService {
             Notification notification = notificationQueue.poll();
             notification.getChannel().send(notification.getContent());
             System.out.println("Notification sent: " + notification.getContent());
+            return;
         }
         System.out.println("No notifications in queue!");
     }
