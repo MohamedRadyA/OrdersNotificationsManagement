@@ -1,5 +1,8 @@
 package com.app.notifications.channel;
 
+import com.app.repo.StatisticsDatabase;
+import org.springframework.beans.factory.annotation.Qualifier;
+
 public class ChannelDecorator implements Channel {
 
 
@@ -29,6 +32,6 @@ public class ChannelDecorator implements Channel {
 
     @Override
     public void send(String message) {
-
+        // Simulate sending
     }
 }

@@ -10,7 +10,9 @@ public class EmailDecorator extends ChannelDecorator{
         super(null, null);
     }
 
+    @Override
     public void send(String message) {
-
+        super.send(message);
+        // Simulate sending to address
     }
 }

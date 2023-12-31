@@ -12,7 +12,8 @@ public class SMSDecorator extends ChannelDecorator{
 
     @Override
     public void send(String message) {
-
+        super.send(message);
+        // Simulate sending to address
     }
 
 }

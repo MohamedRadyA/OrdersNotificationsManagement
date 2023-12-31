@@ -2,21 +2,26 @@ package com.app.notifications;
 
 import com.app.model.User;
 import com.app.notifications.channel.Channel;
+import com.app.notifications.channel.ChannelDecorator;
+import com.app.repo.StatisticsDatabase;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Queue;
 
-
+@Service
 public class NotificationManager {
     Queue<Notification> notificationQueue;
 
-    Database database;
+    StatisticsDatabase database;
 
-    public NotificationManager(@Qualifier("InMemoryDatabase")Database database) {
+    @Autowired
+    public NotificationManager(@Qualifier("inMemoryStatisticsDatabase") StatisticsDatabase database) {
         this.notificationQueue = new LinkedList<Notification>();
         this.database = database;
     }
@@ -25,7 +30,11 @@ public class NotificationManager {
         String content = template.parseTemplate(map);
         Channel channel = user.getChannel();
         addNotification(content, channel, new Date(System.currentTimeMillis()));
-        //TODO: add notification to database
+        database.incrementTemplateCounter(template);
+        while (channel instanceof ChannelDecorator) {
+            database.incrementAddressCounter(((ChannelDecorator) channel).getAddress());
+            channel = ((ChannelDecorator) channel).getWrappee();
+        }
     }
 
     public void addNotification(String content, Channel channel, Date date) {
@@ -40,5 +49,4 @@ public class NotificationManager {
             notification.getChannel().send(notification.getContent());
         }
     }
-
 }

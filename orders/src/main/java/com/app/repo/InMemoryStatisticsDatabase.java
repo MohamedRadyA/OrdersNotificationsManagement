@@ -41,4 +41,16 @@ public class InMemoryStatisticsDatabase implements StatisticsDatabase {
             statistics.put("mostSentTemplate: " + mostSentTemplate, mostSentTemplateCount);
         return statistics;
     }
+
+    @Override
+    public void incrementAddressCounter(String address) {
+        addressCounter.putIfAbsent(address, 0);
+        addressCounter.put(address, addressCounter.get(address) + 1);
+    }
+
+    @Override
+    public void incrementTemplateCounter(NotificationTemplate template) {
+        templateCounter.putIfAbsent(template, 0);
+        templateCounter.put(template, templateCounter.get(template) + 1);
+    }
 }
