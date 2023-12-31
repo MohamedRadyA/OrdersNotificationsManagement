@@ -62,7 +62,8 @@ public class UserService {
             return false;
         }
         Channel channel = new ConcreteChannel();
-        for (var entry : channels.entrySet()) {
+
+        for (Map.Entry<String, Boolean> entry: channels.entrySet()) {
             if (!entry.getValue()) continue;
             ChannelDecorator tmpChannel = (ChannelDecorator) ChannelFactory.createChannel(entry.getKey());
             if(tmpChannel == null)continue;
