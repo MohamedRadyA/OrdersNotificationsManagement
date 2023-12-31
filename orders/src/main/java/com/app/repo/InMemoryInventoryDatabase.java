@@ -66,9 +66,14 @@ public class InMemoryInventoryDatabase implements InventoryDatabase {
 
     @Override
     public Integer getProductStock(String serialNo) {
-        if (products.containsKey(serialNo)) {
+        if (!products.containsKey(serialNo)) {
             return 0;
         }
         return products.get(serialNo).getQuantity();
+    }
+
+    @Override
+    public Map<Category, Integer> getCategoriesCount() {
+        return categoryStock;
     }
 }

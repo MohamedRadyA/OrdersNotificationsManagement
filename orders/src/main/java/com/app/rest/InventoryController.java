@@ -1,5 +1,6 @@
 package com.app.rest;
 
+import com.app.model.Category;
 import com.app.model.Product;
 import com.app.service.InventoryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,5 +56,10 @@ public class InventoryController {
     @GetMapping("/getstats")
     public ResponseEntity<Map<String, Integer>> getStats() {
         return ResponseEntity.ok(inventoryService.getStatistics());
+    }
+
+    @GetMapping("/getcategories")
+    public ResponseEntity<Map<Category, Integer>>getCategoriesCount(){
+        return ResponseEntity.ok(inventoryService.getCategoriesCount());
     }
 }

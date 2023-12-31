@@ -1,9 +1,11 @@
 package com.app.repo;
 
+import com.app.model.Category;
 import com.app.model.Product;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 @Repository
 public interface InventoryDatabase {
@@ -19,4 +21,6 @@ public interface InventoryDatabase {
     ArrayList<Product> getAllProducts();
 
     Integer getProductStock(String serialNo);
+
+    Map<Category, Integer> getCategoriesCount();
 }

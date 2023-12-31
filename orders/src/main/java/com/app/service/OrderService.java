@@ -1,5 +1,6 @@
 package com.app.service;
 
+import com.app.model.Product;
 import com.app.model.notification.NotificationTemplate;
 import com.app.model.order.Order;
 import com.app.model.order.OrderState;
@@ -63,59 +64,12 @@ public class OrderService {
         if (order == null) return false;
         Integer stockQuantity = inventoryDatabase.getProductStock(serialNumber);
         if (stockQuantity < quantity) return false;
+        Product product = inventoryDatabase.getProduct(serialNumber);
+        product.setQuantity(product.getQuantity() - quantity);
         ProductItem currentProduct = new ProductItem(serialNumber, quantity, inventoryDatabase.getProduct(serialNumber).getPrice());
         order.addChild(currentProduct);
         return true;
     }
-
-    private void cancelOrderPlacement(Order order) {
-        order.setState(OrderState.IDLE);
-        order.setPlacementDate(null);
-        Double price = order.getPrice();
-        User user = userDatabase.getUser(order.getBuyerUsername());
-        user.addBalance(price);
-        for (var item : order.getItems()) {
-            if (item instanceof Order) {
-                cancelOrderPlacement((Order) item);
-            }
-        }
-    }
-
-    public Boolean cancelOrderPlacement(Integer orderId) {
-        Order order = orderDatabase.getOrder(orderId);
-        if (order == null || order.getState() != OrderState.PLACED || !order.getMainOrder()) return false;
-        order.setMainOrder(false);
-        cancelOrderPlacement(order);
-        return true;
-    }
-
-    private void cancelOrderShipping(Order order, Double singleOrderFees) {
-        order.setState(OrderState.PLACED);
-        order.setShippingDate(null);
-
-        User user = userDatabase.getUser(order.getBuyerUsername());
-        user.addBalance(singleOrderFees);
-        for (var item : order.getItems()) {
-            if (item instanceof Order) {
-                cancelOrderShipping((Order) item, singleOrderFees);
-            }
-        }
-    }
-
-    public Boolean cancelOrderShipping(Integer orderId) {
-        Order order = orderDatabase.getOrder(orderId);
-        if (order == null || order.getState() != OrderState.SHIPPED || !order.getMainOrder()) return false;
-        long duration = (order.getPlacementDate().getTime() - System.currentTimeMillis()) / 1000;
-        if (duration > MAXIMUM_CANCEL_DURATION) return false;
-
-        Double shipmentFees = getShippingFees(order);
-        Integer numberOfOrders = getNumberOfOrders(order);
-        Double singleOrderFees = shipmentFees / numberOfOrders;
-
-        cancelOrderShipping(order, singleOrderFees);
-        return true;
-    }
-
 
     private Boolean verifyUsersBalance(Order order, Function<Order, Double> getPrice) {
         User user = userDatabase.getUser(order.getBuyerUsername());
@@ -178,7 +132,7 @@ public class OrderService {
     }
 
     private Double getShippingFees(Order order) {
-        return 1000.0;
+        return 20.0;
     }
 
     private Integer getNumberOfOrders(Order order) {
@@ -224,6 +178,54 @@ public class OrderService {
         if (!verifyUsersBalance(order, function))
             return false;
         shipOrder(order, singleOrderFees);
+        return true;
+    }
+
+    private void cancelOrderPlacement(Order order) {
+        order.setState(OrderState.IDLE);
+        order.setPlacementDate(null);
+        Double price = order.getPrice();
+        User user = userDatabase.getUser(order.getBuyerUsername());
+        user.addBalance(price);
+        for (var item : order.getItems()) {
+            if (item instanceof Order) {
+                cancelOrderPlacement((Order) item);
+            }
+        }
+    }
+
+    public Boolean cancelOrderPlacement(Integer orderId) {
+        Order order = orderDatabase.getOrder(orderId);
+        if (order == null || order.getState() != OrderState.PLACED || !order.getMainOrder()) return false;
+        order.setMainOrder(false);
+        cancelOrderPlacement(order);
+        return true;
+    }
+
+    private void cancelOrderShipping(Order order, Double singleOrderFees) {
+        order.setState(OrderState.PLACED);
+        order.setShippingDate(null);
+
+        User user = userDatabase.getUser(order.getBuyerUsername());
+        user.addBalance(singleOrderFees);
+        for (var item : order.getItems()) {
+            if (item instanceof Order) {
+                cancelOrderShipping((Order) item, singleOrderFees);
+            }
+        }
+    }
+
+    public Boolean cancelOrderShipping(Integer orderId) {
+        Order order = orderDatabase.getOrder(orderId);
+        if (order == null || order.getState() != OrderState.SHIPPED || !order.getMainOrder()) return false;
+        long duration = (System.currentTimeMillis() - order.getShippingDate().getTime()) / 1000;
+        if (duration > MAXIMUM_CANCEL_DURATION) return false;
+
+        Double shipmentFees = getShippingFees(order);
+        Integer numberOfOrders = getNumberOfOrders(order);
+        Double singleOrderFees = shipmentFees / numberOfOrders;
+
+        cancelOrderShipping(order, singleOrderFees);
         return true;
     }
 

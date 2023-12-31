@@ -1,10 +1,12 @@
 package com.app.service;
 
+import com.app.model.Category;
 import com.app.model.Product;
 import com.app.repo.InventoryDatabase;
 import com.app.repo.StatisticsDatabase;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -41,5 +43,9 @@ public class InventoryService {
 
     public Map<String, Integer> getStatistics() {
         return statisticsDatabase.getStatistics();
+    }
+
+    public Map<Category, Integer>getCategoriesCount(){
+        return inventoryDatabase.getCategoriesCount();
     }
 }
