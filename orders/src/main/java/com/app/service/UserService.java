@@ -15,12 +15,22 @@ public class UserService {
     private UserService() {
         database = Database.getInstance();
     }
-
+/*
     public Boolean createUser(String username, String password, double balance) {
         if (database.userExist(username)) {
             return false;
         }
         User user = new User(username, password, balance);
+        database.addUser(user);
+        return true;
+    }
+*/
+    //TODO: Check if the above method is needed or not
+
+    public Boolean createUser(User user) {
+        if (database.userExist(user.getUsername())) {
+            return false;
+        }
         database.addUser(user);
         return true;
     }
@@ -31,6 +41,7 @@ public class UserService {
         }
         Channel channel = new concreteChannel();
         for (var entry : channels.entrySet()) {
+            if (entry.getValue() == false) continue;
             Channel tmpChannel = ChannelFactory.createChannel(entry);
             if(tmpChannel == null)continue;
             tmpChannel.setWrappee(channel);
@@ -38,6 +49,7 @@ public class UserService {
         }
         User user = getUserByUsername(username);
         user.setChannel(channel);
+        database.updateUser(user);
         return true;
     }
 }
