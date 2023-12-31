@@ -16,15 +16,15 @@ public class User {
 
     private String emailAddress;
 
-    private String preferredLang = "en";
+    private String preferredLang;
 
     @JsonProperty("balance")
     private Double balance;
 
-    private Channel channel = new ConcreteChannel();
+    private Channel channel;
 
     @JsonCreator
-    public User(String username, String password,Double balance) {
+    public User(String username, String password, Double balance) {
         this.username = username;
         this.password = password;
         this.balance = balance;
@@ -84,6 +84,7 @@ public class User {
     }
 
     public String getPreferredLang() {
+        if (preferredLang == null) return "en";
         return preferredLang;
     }
 
@@ -92,16 +93,17 @@ public class User {
     }
 
     public Channel getChannel() {
+        if (channel == null) return new ConcreteChannel();
         return channel;
     }
 
-    public Boolean addBalance(double add){
+    public Boolean addBalance(double add) {
         balance += add;
         return true;
     }
 
-    public Boolean subtractBalance(double subtract){
-        if(balance < subtract){
+    public Boolean subtractBalance(double subtract) {
+        if (balance < subtract) {
             return false;
         }
         balance -= subtract;

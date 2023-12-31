@@ -49,9 +49,9 @@ public class UserService {
         }
         User dbUser = userDatabase.getUser(user.getUsername());
         if(dbUser.getPassword().equals(user.getPassword())){
-            Map<String, String> placeHolders = Map.ofEntries(entry("lang", user.getPreferredLang()),
-                    entry("name", user.getUsername()));
-            notificationService.sendNotification(NotificationTemplate.USER_LOGIN, placeHolders, user);
+            Map<String, String> placeHolders = Map.ofEntries(entry("lang", dbUser.getPreferredLang()),
+                    entry("name", dbUser.getUsername()));
+            notificationService.sendNotification(NotificationTemplate.USER_LOGIN, placeHolders, dbUser);
             return true;
         }
         return false;

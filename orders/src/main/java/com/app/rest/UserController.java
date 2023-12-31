@@ -27,6 +27,7 @@ public class UserController {
         return ResponseEntity.ok().body(userService.generateUserToken(user));
     }
 
+
     @PostMapping("/register")
     public ResponseEntity<String> createUser(@RequestBody User user) {
         if (!userService.createUser(user)) {

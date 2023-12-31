@@ -43,7 +43,7 @@ public class NotificationService {
         this.notificationQueue.add(notification);
     }
 
-    @Scheduled(fixedDelay = 15000, initialDelay = 0)
+    @Scheduled(fixedDelay = 5000, initialDelay = 0)
     public void notificationCleanup() {
         if (!notificationQueue.isEmpty()) {
             Notification notification = notificationQueue.poll();
