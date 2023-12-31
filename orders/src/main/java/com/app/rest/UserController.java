@@ -31,7 +31,7 @@ public class UserController {
         if (!userService.loginUser(user)) {
             return ResponseEntity.badRequest().body(null);
         }
-        return ResponseEntity.ok().body(generateToken(user));
+        return ResponseEntity.ok().body(userService.generateUserToken(user));
     }
 
     @PostMapping("/register")
@@ -39,7 +39,7 @@ public class UserController {
         if (!userService.createUser(user)) {
             return ResponseEntity.badRequest().body("User creation failed");
         }
-        return ResponseEntity.ok().body(generateToken(user));
+        return ResponseEntity.ok().body(userService.generateUserToken(user));
     }
 
     @PutMapping("/setchannels/{username}")
@@ -50,13 +50,5 @@ public class UserController {
         return ResponseEntity.ok().body("Channels set successfully");
     }
 
-    public String generateToken(User user) {
-        long time = System.currentTimeMillis();
-        String token = Jwts.builder().signWith(SignatureAlgorithm.HS256, Constants.SECRET_KEY)
-                .setIssuedAt(new Date(time))
-                .setExpiration(new Date(time + Constants.TOKEN_DURATION))
-                .claim("username", user.getUsername())
-                .compact();
-        return token;
-    }
+
 }

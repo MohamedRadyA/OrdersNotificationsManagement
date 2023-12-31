@@ -116,12 +116,12 @@ public class OrderService {
         return true;
     }
 
-    private Boolean verifyIdleOrders(Order order) {
-        if (!order.getState().equals(OrderState.IDLE))
+    private Boolean verifyOrdersStatus(Order order) {
+        if (order.getState().equals(OrderState.SHIPPED))
             return false;
         for (var item : order.getItems()) {
             if (item instanceof Order) {
-                if (!verifyIdleOrders((Order) item)) {
+                if (!verifyOrdersStatus((Order) item)) {
                     return false;
                 }
             }
@@ -131,11 +131,13 @@ public class OrderService {
 
 
     private void placeOrder(Order order) {
-        order.setState(OrderState.PLACED);
-        order.setPlacementDate(LocalDateTime.now());
-        double price = order.getPrice();
-        User user = database.getUser(order.getBuyerUsername());
-        user.subtractBalance(price);
+        if (order.getState().equals(OrderState.IDLE)) {
+            order.setState(OrderState.PLACED);
+            order.setPlacementDate(LocalDateTime.now());
+            double price = order.getPrice();
+            User user = database.getUser(order.getBuyerUsername());
+            user.subtractBalance(price);
+        }
         for (var item : order.getItems()) {
             if (item instanceof Order) {
                 placeOrder((Order) item);
@@ -149,7 +151,7 @@ public class OrderService {
 
         if (!verifyUsersBalance(order, Order::getPrice))
             return false;
-        if (!verifyIdleOrders(order))
+        if (!verifyOrdersStatus(order))
             return false;
         order.setMainOrder(true);
         placeOrder(order);
@@ -201,7 +203,7 @@ public class OrderService {
         return true;
     }
 
-    public Order getOrderDetails(int orderId){
+    public Order getOrderDetails(int orderId) {
         return database.getOrder(orderId);
     }
 }

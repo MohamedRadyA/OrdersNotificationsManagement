@@ -1,13 +1,17 @@
 package com.app.service;
 
+import com.app.auth.Constants;
 import com.app.model.User;
 import com.app.notifications.*;
 import com.app.repo.Database;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 
+import java.util.Date;
 import java.util.Map;
 
 @Service
@@ -51,5 +55,15 @@ public class UserService {
         User user = database.getUser(username);
         user.setChannel(channel);
         return true;
+    }
+
+    public String generateUserToken(User user) {
+        long time = System.currentTimeMillis();
+        String token = Jwts.builder().signWith(SignatureAlgorithm.HS256, Constants.SECRET_KEY)
+                .setIssuedAt(new Date(time))
+                .setExpiration(new Date(time + Constants.TOKEN_DURATION))
+                .claim("username", user.getUsername())
+                .compact();
+        return token;
     }
 }
