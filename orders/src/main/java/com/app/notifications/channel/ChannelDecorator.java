@@ -1,4 +1,4 @@
-package com.app.notifications;
+package com.app.notifications.channel;
 
 public class ChannelDecorator implements Channel {
 

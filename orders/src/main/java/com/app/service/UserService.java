@@ -2,7 +2,10 @@ package com.app.service;
 
 import com.app.auth.Constants;
 import com.app.model.User;
-import com.app.notifications.*;
+import com.app.notifications.channel.Channel;
+import com.app.notifications.channel.ChannelDecorator;
+import com.app.notifications.channel.ChannelFactory;
+import com.app.notifications.channel.ConcreteChannel;
 import com.app.repo.Database;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;

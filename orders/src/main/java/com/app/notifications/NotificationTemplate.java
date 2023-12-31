@@ -39,7 +39,7 @@ public enum NotificationTemplate {
 
 
     /**
-     * The template is a map of language to template
+     * Maps language to corresponding template
      */
     private Map<String, String> templates;
 
@@ -47,10 +47,10 @@ public enum NotificationTemplate {
         this.templates = templates;
     }
 
-    public String parseTemplate(Map<String, String> map) {
+    public String parseTemplate(Map<String, Object> map) {
         String parsedTemplate = this.templates.get(map.get("lang"));
-        for (Map.Entry<String, String> entry : map.entrySet()) {
-            parsedTemplate = parsedTemplate.replace("{" + entry.getKey() + "}", entry.getValue());
+        for (Map.Entry<String, Object> entry : map.entrySet()) {
+            parsedTemplate = parsedTemplate.replace("{" + entry.getKey() + "}", entry.getValue().toString());
         }
         return parsedTemplate;
     }

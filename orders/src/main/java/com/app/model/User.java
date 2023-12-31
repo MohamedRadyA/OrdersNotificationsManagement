@@ -1,6 +1,6 @@
 package com.app.model;
 
-import com.app.notifications.Channel;
+import com.app.notifications.channel.Channel;
 
 public class User {
     private String username;
@@ -96,5 +96,16 @@ public class User {
         }
         balance -= subtract;
         return true;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "username='" + username + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", emailAddress='" + emailAddress + '\'' +
+                ", preferredLang='" + preferredLang + '\'' +
+                ", balance=" + balance +
+                '}';
     }
 }

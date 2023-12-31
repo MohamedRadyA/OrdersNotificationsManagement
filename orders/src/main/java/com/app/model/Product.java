@@ -61,4 +61,10 @@ public class Product {
     public void setQuantity(Integer quantity) {
         this.quantity = quantity;
     }
+
+    @Override
+    public String toString() {
+        return "Product [serialNumber=" + serialNumber + ", name=" + name + ", vendor=" + vendor + ", category="
+                + category + ", price=" + price + ", quantity=" + quantity + "]";
+    }
 }

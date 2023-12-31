@@ -1,4 +1,4 @@
-package com.app.notifications;
+package com.app.notifications.channel;
 
 public interface Channel {
     void send(String message);

@@ -1,18 +1,17 @@
 package com.app.service;
 
-import ch.qos.logback.core.joran.sanity.Pair;
-import com.app.model.*;
+import com.app.model.Order;
+import com.app.model.OrderState;
+import com.app.model.ProductItem;
+import com.app.model.User;
+import com.app.notifications.NotificationManager;
 import com.app.repo.Database;
-import org.apache.tomcat.util.bcel.Const;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.function.Function;
 
 @Service
@@ -20,6 +19,7 @@ public class OrderService {
 
     private final long MAXIMUM_CANCEL_DURATION = 1 * 24 * 60 * 60;
     private final Database database;
+    private NotificationManager notificationManager;
 
 
     @Autowired
