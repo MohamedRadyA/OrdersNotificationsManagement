@@ -6,6 +6,8 @@ import com.app.model.User;
 import com.app.model.channel.Channel;
 import com.app.model.channel.ChannelDecorator;
 import com.app.repo.StatisticsDatabase;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -26,8 +28,10 @@ public class NotificationService {
     }
 
     public void sendNotification(NotificationTemplate template, Map<String, String> map, User user) {
-        String content = template.parseTemplate(map);
         Channel channel = user.getChannel();
+        if (channel == null)
+            return;
+        String content = template.parseTemplate(map);
         addNotification(content, channel, new Date(System.currentTimeMillis()));
         database.incrementTemplateCounter(template);
         while (channel instanceof ChannelDecorator) {
@@ -41,11 +45,14 @@ public class NotificationService {
         this.notificationQueue.add(notification);
     }
 
-    @Scheduled(fixedDelay = 60000, initialDelay = 0)
+    @Scheduled(fixedDelay = 15000, initialDelay = 0)
     public void notificationCleanup() {
         if (!notificationQueue.isEmpty()) {
             Notification notification = notificationQueue.poll();
             notification.getChannel().send(notification.getContent());
+            System.out.println("Notification sent: " + notification.getContent());
+            System.out.println("Notification sent to: " + ((ChannelDecorator) notification.getChannel()).getAddress());
         }
+        System.out.println("No notifications in queue!");
     }
 }
