@@ -12,6 +12,10 @@ public interface Database {
 
     Boolean addProduct(Product product);
 
+    public Boolean increaseProductStock(String serialNo,Integer quantity);
+
+    public Boolean decreaseProductStock(String serialNo,Integer quantity);
+
     Order getOrder(int id);
 
     Product getProduct(String serialNo);

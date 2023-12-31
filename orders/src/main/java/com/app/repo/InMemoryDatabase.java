@@ -35,20 +35,33 @@ public class InMemoryDatabase implements Database {
     }
 
     // Update stock
-//    @Override
-//    public Boolean addProduct(Product product) {
-//        String serialNo = product.getSerialNumber();
-//        products.put(serialNo, product);
-//        productStock.put(serialNo, productStock.getOrDefault(serialNo, 0) + 1);
-//        return true;
-//    }
-
-        @Override
-    public Boolean addProduct(Product product) {
-        String serialNo = product.getSerialNumber();
-        if(products.containsKey(serialNo)){
+    @Override
+    public Boolean increaseProductStock(String serialNot, Integer quantity) {
+        if (products.containsKey(serialNot)) {
             return false;
         }
+        categoryStock.put(products.get(serialNot).getCategory(), categoryStock.get(products.get(serialNot).getCategory()) + quantity);
+        products.get(serialNot).setQuantity(products.get(serialNot).getQuantity() + quantity);
+        return true;
+    }
+
+    @Override
+    public Boolean decreaseProductStock(String serialNot, Integer quantity) {
+        if (products.containsKey(serialNot) || products.get(serialNot).getQuantity() < quantity) {
+            return false;
+        }
+        categoryStock.put(products.get(serialNot).getCategory(), categoryStock.get(products.get(serialNot).getCategory()) - quantity);
+        products.get(serialNot).setQuantity(products.get(serialNot).getQuantity() - quantity);
+        return true;
+    }
+
+    @Override
+    public Boolean addProduct(Product product) {
+        String serialNo = product.getSerialNumber();
+        if (products.containsKey(serialNo)) {
+            return false;
+        }
+        categoryStock.put(product.getCategory(),categoryStock.get(product.getCategory()) + product.getQuantity());
         products.put(serialNo, product);
         return true;
     }
@@ -69,7 +82,7 @@ public class InMemoryDatabase implements Database {
     }
 
     public Integer getProductStock(String serialNo) {
-        if(products.containsKey(serialNo)){
+        if (products.containsKey(serialNo)) {
             return 0;
         }
         return products.get(serialNo).getQuantity();
@@ -106,7 +119,7 @@ public class InMemoryDatabase implements Database {
     }
 
     public Map<String, Integer> getStatistics() {
-        Map <String, Integer> statistics = new HashMap<>();
+        Map<String, Integer> statistics = new HashMap<>();
         String mostNotifiedAddress = null;
         NotificationTemplate mostSentTemplate = null;
         int mostNotifiedAddressCount = 0, mostSentTemplateCount = 0;
