@@ -7,7 +7,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class Order implements OrderComponent {
-    private ArrayList<OrderComponent> items = new ArrayList<>();
+    private ArrayList<OrderComponent> items;
     private int id;
     private String buyerUsername;
     private LocalDateTime placementDate;
@@ -16,6 +16,7 @@ public class Order implements OrderComponent {
     private OrderState state;
 
     public Order(int id, String buyerUsername, LocalDateTime placementDate, LocalDateTime shippingDate, String shippingAddress, OrderState state) {
+        items = new ArrayList<>();
         this.id = id;
         this.buyerUsername = buyerUsername;
         this.placementDate = placementDate;
@@ -110,29 +111,23 @@ public class Order implements OrderComponent {
                 .append("state= ").append(state).append(", ")
                 .append("items=[");
 
-        // Separate product items and orders
-        ArrayList<OrderComponent> productItems = new ArrayList<>();
-        ArrayList<OrderComponent> orders = new ArrayList<>();
+
+        ArrayList<OrderComponent> sortedItems = new ArrayList<>();
         for (OrderComponent item : items) {
             if (item instanceof ProductItem) {
-                productItems.add(item);
-            } else if (item instanceof Order) {
-                orders.add(item);
+                sortedItems.add(item);
             }
         }
-
-        // Print product items
-        for (int i = 0; i < productItems.size(); i++) {
-            info.append("\n ").append(productItems.get(i).getInformation());
-            if (i != productItems.size() - 1 || !orders.isEmpty()) {
-                info.append(", ");
+        for (OrderComponent item : items) {
+            if (item instanceof Order) {
+                sortedItems.add(item);
             }
         }
 
         // Print orders
-        for (int i = 0; i < orders.size(); i++) {
-            info.append("\n ").append(orders.get(i).getInformation());
-            if (i != orders.size() - 1) {
+        for (int i = 0; i < sortedItems.size(); i++) {
+            info.append("\n ").append(sortedItems.get(i).getInformation());
+            if (i != sortedItems.size() - 1) {
                 info.append(", ");
             }
         }
@@ -141,5 +136,13 @@ public class Order implements OrderComponent {
 
         return info.toString();
     }
+
+/*    public double getPrice() {
+        double price = 0;
+        for (OrderComponent item : items) {
+            price += item.getPrice();
+        }
+        return price;
+    }*/
 }
 

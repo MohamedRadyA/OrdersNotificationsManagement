@@ -1,5 +1,6 @@
 package com.app.rest;
 
+import com.app.model.Order;
 import com.app.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +16,6 @@ public class OrderController {
 
     @PostMapping("/create/")
     public ResponseEntity<String> createOrder(@RequestBody Order order) {
-        orderService.
         return ResponseEntity.ok("Order created");
     }
 
