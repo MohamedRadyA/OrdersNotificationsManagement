@@ -27,7 +27,7 @@ public class InformationService {
         return database.getAllProducts();
     }
 
-    public HashMap<String, Integer>getStatistics(){
+    public Map<String, Integer>getStatistics(){
         return database.getStatistics();
     }
 }

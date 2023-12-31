@@ -17,7 +17,9 @@ public class NotificationManager {
     }
 
     public void sendNotification(NotificationTemplate template, HashMap<String, String> map, User user) {
-
+        String content = template.parseTemplate(map);
+        Channel channel = user.getChannel();
+        channel.send(content);
     }
 
     public void addNotification(String content, Channel channel, Date date) {
