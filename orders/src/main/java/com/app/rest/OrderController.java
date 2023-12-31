@@ -8,10 +8,16 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
+@RestController
 @RequestMapping("/order")
 public class OrderController {
 
-    private OrderService orderService = OrderService.getInstance();
+    private OrderService orderService;
+
+    @Autowired
+    public OrderController(OrderService orderService) {
+        this.orderService = orderService;
+    }
 
     //TODO
     @PostMapping("/create")
@@ -36,12 +42,13 @@ public class OrderController {
         return ResponseEntity.ok("Order added");
     }
 
-    @GetMapping("/get")
-    public ResponseEntity<String> getOrderDetails(@PathVariable Integer id) {
-        if (!orderService.getOrder(id)) {
-            return ResponseEntity.badRequest().body("Order not found");
+    @GetMapping("/get/{id}")
+    public ResponseEntity<Order> getOrderDetails(@PathVariable Integer id) {
+        Order order = orderService.getOrderDetails(id);
+        if (order == null) {
+            return ResponseEntity.badRequest().body(null);
         }
-        return ResponseEntity.ok("Order found");
+        return ResponseEntity.ok(order);
     }
 
     @PostMapping("/cancelplacement")

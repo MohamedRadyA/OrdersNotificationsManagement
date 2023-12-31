@@ -22,11 +22,18 @@ public class UserService {
 
 
     public Boolean createUser(User user) {
-        if (database.userExists(user.getUsername())) {
+        if (database.userExists(user.getUsername()) || user.getPassword().isEmpty()) {
             return false;
         }
         database.addUser(user);
         return true;
+    }
+    public Boolean loginUser(User user){
+        if (database.userExists(user.getUsername())) {
+            return false;
+        }
+        User dbUser = database.getUser(user.getUsername());
+        return dbUser.getPassword().equals(user.getPassword());
     }
 
     public Boolean setChannel(String username, Map<String, Boolean> channels) {

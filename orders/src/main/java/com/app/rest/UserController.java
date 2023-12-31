@@ -1,25 +1,37 @@
 package com.app.rest;
 
+import com.app.auth.Constants;
 import com.app.model.User;
 import com.app.repo.Database;
 import com.app.service.UserService;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+@RestController
 @RequestMapping("/user")
 public class UserController {
 
-    private UserService userService = UserService.getInstance();
-    private Database database = Database.getInstance();
+    private UserService userService;
+
+    @Autowired
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
     @PostMapping("/login")
-    public String login() {
-        return "Login";
+    public ResponseEntity<String> login(@RequestBody User user) {
+        if (!userService.loginUser(user)) {
+            return ResponseEntity.badRequest().body(null);
+        }
+        return ResponseEntity.ok().body(generateToken(user));
     }
 
     @PostMapping("/register")
@@ -27,7 +39,7 @@ public class UserController {
         if (!userService.createUser(user)) {
             return ResponseEntity.badRequest().body("User creation failed");
         }
-        return ResponseEntity.ok().body("User created successfully");
+        return ResponseEntity.ok().body(generateToken(user));
     }
 
     @PutMapping("/setchannels/{username}")
@@ -38,11 +50,13 @@ public class UserController {
         return ResponseEntity.ok().body("Channels set successfully");
     }
 
-    public HashMap<String, String> generateToken(User user) {
-        HashMap<String, String> token = new HashMap<>();
-        token.put("token", "token");
-        token.put("refreshToken", "refreshToken");
+    public String generateToken(User user) {
+        long time = System.currentTimeMillis();
+        String token = Jwts.builder().signWith(SignatureAlgorithm.HS256, Constants.SECRET_KEY)
+                .setIssuedAt(new Date(time))
+                .setExpiration(new Date(time + Constants.TOKEN_DURATION))
+                .claim("username", user.getUsername())
+                .compact();
         return token;
-        //TODO: Implement JWT
     }
 }
