@@ -1,18 +1,11 @@
 package com.app.rest;
 
-import com.app.auth.Constants;
 import com.app.model.User;
-import com.app.repo.Database;
 import com.app.service.UserService;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
 
 @RestController

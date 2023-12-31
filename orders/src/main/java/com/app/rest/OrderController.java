@@ -21,8 +21,10 @@ public class OrderController {
 
     //TODO
     @PostMapping("/create")
-    public ResponseEntity<String> createNewOrder(@RequestBody String username) {
-        orderService.createNewOrder(username);
+    public ResponseEntity<String> createNewOrder(@RequestBody Map<String, Object> data) {
+        String username = (String)data.get("username");
+        String address = (String)data.get("address");
+        orderService.createNewOrder(username,address);
         return ResponseEntity.ok("Order created");
     }
 

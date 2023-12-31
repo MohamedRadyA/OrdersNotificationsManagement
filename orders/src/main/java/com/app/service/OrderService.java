@@ -5,7 +5,7 @@ import com.app.model.OrderState;
 import com.app.model.ProductItem;
 import com.app.model.User;
 import com.app.notifications.NotificationManager;
-import com.app.repo.Database;
+import com.app.repo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -18,24 +18,34 @@ import java.util.function.Function;
 public class OrderService {
 
     private final long MAXIMUM_CANCEL_DURATION = 1 * 24 * 60 * 60;
-    private final Database database;
+
+    private final OrderDatabase orderDatabase;
+
+    private final UserDatabase userDatabase;
+
+    private final InventoryDatabase inventoryDatabase;
+
     private NotificationManager notificationManager;
 
 
     @Autowired
-    public OrderService(@Qualifier("inMemoryDatabase") Database database) {
-        this.database = database;
+    public OrderService(@Qualifier("inMemoryOrderDatabase") OrderDatabase orderDatabase,
+                        @Qualifier("inMemoryUserDatabase") UserDatabase userDatabase,
+                        @Qualifier("inMemoryInventoryDatabase") InventoryDatabase inventoryDatabase) {
+        this.orderDatabase = orderDatabase;
+        this.userDatabase = userDatabase;
+        this.inventoryDatabase = inventoryDatabase;
     }
 
-    public Boolean createNewOrder(String username) {
-        Integer id = database.getNextOrderId();
-        Order newOrder = new Order(id, username, null, null, null, OrderState.IDLE);
-        return database.addOrder(newOrder);
+    public Boolean createNewOrder(String username, String address) {
+        Integer id = orderDatabase.getNextOrderId();
+        Order newOrder = new Order(id, username, null, null, address, OrderState.IDLE);
+        return orderDatabase.addOrder(newOrder);
     }
 
     public Boolean addOrderToOrder(Integer orderId, Integer orderToAddId) {
-        Order order = database.getOrder(orderId);
-        Order orderToAdd = database.getOrder(orderToAddId);
+        Order order = orderDatabase.getOrder(orderId);
+        Order orderToAdd = orderDatabase.getOrder(orderToAddId);
         if (order == null || orderToAdd == null) return false;
         order.addChild(orderToAdd);
         return true;
@@ -43,11 +53,11 @@ public class OrderService {
 
     public Boolean addProductToOrder(Integer orderId, String serialNumber, Integer quantity) {
         if (quantity <= 0) return false;
-        Order order = database.getOrder(orderId);
+        Order order = orderDatabase.getOrder(orderId);
         if (order == null) return false;
-        Integer stockQuantity = database.getProductStock(serialNumber);
+        Integer stockQuantity = inventoryDatabase.getProductStock(serialNumber);
         if (stockQuantity < quantity) return false;
-        ProductItem currentProduct = new ProductItem(serialNumber, quantity, database.getProduct(serialNumber).getPrice());
+        ProductItem currentProduct = new ProductItem(serialNumber, quantity, inventoryDatabase.getProduct(serialNumber).getPrice());
         order.addChild(currentProduct);
         return true;
     }
@@ -56,7 +66,7 @@ public class OrderService {
         order.setState(OrderState.IDLE);
         order.setPlacementDate(null);
         Double price = order.getPrice();
-        User user = database.getUser(order.getBuyerUsername());
+        User user = userDatabase.getUser(order.getBuyerUsername());
         user.addBalance(price);
         for (var item : order.getItems()) {
             if (item instanceof Order) {
@@ -66,7 +76,7 @@ public class OrderService {
     }
 
     public Boolean cancelOrderPlacement(Integer orderId) {
-        Order order = database.getOrder(orderId);
+        Order order = orderDatabase.getOrder(orderId);
         if (order == null || order.getState() != OrderState.PLACED || !order.getMainOrder()) return false;
         order.setMainOrder(false);
         cancelOrderPlacement(order);
@@ -77,7 +87,7 @@ public class OrderService {
         order.setState(OrderState.PLACED);
         order.setShippingDate(null);
 
-        User user = database.getUser(order.getBuyerUsername());
+        User user = userDatabase.getUser(order.getBuyerUsername());
         user.addBalance(singleOrderFees);
         for (var item : order.getItems()) {
             if (item instanceof Order) {
@@ -87,7 +97,7 @@ public class OrderService {
     }
 
     public Boolean cancelOrderShipping(Integer orderId) {
-        Order order = database.getOrder(orderId);
+        Order order = orderDatabase.getOrder(orderId);
         if (order == null || order.getState() != OrderState.SHIPPED || !order.getMainOrder()) return false;
         Duration duration = Duration.between(order.getPlacementDate(), LocalDateTime.now());
         if (duration.getSeconds() > MAXIMUM_CANCEL_DURATION) return false;
@@ -102,7 +112,7 @@ public class OrderService {
 
 
     private Boolean verifyUsersBalance(Order order, Function<Order, Double> getPrice) {
-        User user = database.getUser(order.getBuyerUsername());
+        User user = userDatabase.getUser(order.getBuyerUsername());
         if (user.getBalance() < getPrice.apply(order)) {
             return false;
         }
@@ -135,7 +145,7 @@ public class OrderService {
             order.setState(OrderState.PLACED);
             order.setPlacementDate(LocalDateTime.now());
             Double price = order.getPrice();
-            User user = database.getUser(order.getBuyerUsername());
+            User user = userDatabase.getUser(order.getBuyerUsername());
             user.subtractBalance(price);
         }
         for (var item : order.getItems()) {
@@ -146,7 +156,7 @@ public class OrderService {
     }
 
     public Boolean placeOrder(Integer orderId) {
-        Order order = database.getOrder(orderId);
+        Order order = orderDatabase.getOrder(orderId);
         if (order == null) return false;
 
         if (!verifyUsersBalance(order, Order::getPrice))
@@ -176,7 +186,7 @@ public class OrderService {
         order.setState(OrderState.SHIPPED);
         order.setShippingDate(LocalDateTime.now());
 
-        User user = database.getUser(order.getBuyerUsername());
+        User user = userDatabase.getUser(order.getBuyerUsername());
         user.subtractBalance(singleOrderFees);
         for (var item : order.getItems()) {
             if (item instanceof Order) {
@@ -186,7 +196,7 @@ public class OrderService {
     }
 
     public Boolean shipOrder(Integer orderId) {
-        Order order = database.getOrder(orderId);
+        Order order = orderDatabase.getOrder(orderId);
         if (order == null) return false;
 
         if (!order.getMainOrder() || !order.getState().equals(OrderState.PLACED))
@@ -204,6 +214,6 @@ public class OrderService {
     }
 
     public Order getOrderDetails(Integer orderId) {
-        return database.getOrder(orderId);
+        return orderDatabase.getOrder(orderId);
     }
 }

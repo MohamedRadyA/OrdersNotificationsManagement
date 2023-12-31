@@ -2,7 +2,6 @@ package com.app.notifications;
 
 import com.app.model.User;
 import com.app.notifications.channel.Channel;
-import com.app.repo.Database;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.scheduling.annotation.Scheduled;
 

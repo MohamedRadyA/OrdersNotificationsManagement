@@ -1,30 +1,33 @@
 package com.app.service;
 
 import com.app.model.Product;
-import com.app.repo.Database;
+import com.app.repo.InventoryDatabase;
+import com.app.repo.StatisticsDatabase;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 
 @Service
 public class InformationService {
 
-    private final Database database;
+    private final StatisticsDatabase statisticsDatabase;
+    private final InventoryDatabase inventoryDatabase;
 
     @Autowired
-    public InformationService(@Qualifier("inMemoryDatabase") Database database) {
-        this.database = database;
+    public InformationService(@Qualifier("inMemoryStatisticsDatabase") StatisticsDatabase statisticsDatabase,
+                              @Qualifier("inMemoryInventoryDatabase") InventoryDatabase inventoryDatabase) {
+        this.statisticsDatabase = statisticsDatabase;
+        this.inventoryDatabase = inventoryDatabase;
     }
 
     public ArrayList<Product> getAllProducts() {
-        return database.getAllProducts();
+        return inventoryDatabase.getAllProducts();
     }
 
     public Map<String, Integer> getStatistics() {
-        return database.getStatistics();
+        return statisticsDatabase.getStatistics();
     }
 }

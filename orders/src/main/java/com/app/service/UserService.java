@@ -6,7 +6,7 @@ import com.app.notifications.channel.Channel;
 import com.app.notifications.channel.ChannelDecorator;
 import com.app.notifications.channel.ChannelFactory;
 import com.app.notifications.channel.ConcreteChannel;
-import com.app.repo.Database;
+import com.app.repo.UserDatabase;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,32 +19,32 @@ import java.util.Map;
 
 @Service
 public class UserService {
-    private final Database database;
+    private final UserDatabase userDatabase;
 
 
     @Autowired
-    public UserService(@Qualifier("inMemoryDatabase")Database database) {
-        this.database = database;
+    public UserService(@Qualifier("inMemoryUserDatabase")UserDatabase userDatabase) {
+        this.userDatabase = userDatabase;
     }
 
 
     public Boolean createUser(User user) {
-        if (database.userExists(user.getUsername()) || user.getPassword().isEmpty()) {
+        if (userDatabase.userExists(user.getUsername()) || user.getPassword().isEmpty()) {
             return false;
         }
-        database.addUser(user);
+        userDatabase.addUser(user);
         return true;
     }
     public Boolean loginUser(User user){
-        if (database.userExists(user.getUsername())) {
+        if (userDatabase.userExists(user.getUsername())) {
             return false;
         }
-        User dbUser = database.getUser(user.getUsername());
+        User dbUser = userDatabase.getUser(user.getUsername());
         return dbUser.getPassword().equals(user.getPassword());
     }
 
     public Boolean setChannel(String username, Map<String, Boolean> channels) {
-        if (!database.userExists(username)) {
+        if (!userDatabase.userExists(username)) {
             return false;
         }
         Channel channel = new ConcreteChannel();
@@ -55,7 +55,7 @@ public class UserService {
             tmpChannel.setWrappee(channel);
             channel = tmpChannel;
         }
-        User user = database.getUser(username);
+        User user = userDatabase.getUser(username);
         user.setChannel(channel);
         return true;
     }
