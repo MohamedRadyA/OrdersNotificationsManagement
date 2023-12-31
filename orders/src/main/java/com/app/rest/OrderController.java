@@ -8,53 +8,71 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
-@RequestMapping("/order/")
+@RequestMapping("/order")
 public class OrderController {
 
-    @Autowired
-    private OrderService orderService;
+    private OrderService orderService = OrderService.getInstance();
 
-    @PostMapping("/create/")
-    public ResponseEntity<String> createOrder(@RequestBody Order order) {
+    //TODO
+    @PostMapping("/create")
+    public ResponseEntity<String> createNewOrder(@RequestBody String username) {
+        orderService.createNewOrder(username);
         return ResponseEntity.ok("Order created");
     }
 
-    @PostMapping("/addproduct/")
-    public boolean addProductToOrder() {
-        return true;
+    @PostMapping("/addproduct")
+    public ResponseEntity<String> addProductToOrder(@RequestBody Integer id, @RequestBody String serialNumber, @RequestBody Integer quantity) {
+        if (!orderService.addProductToOrder(id, serialNumber, quantity)) {
+            return ResponseEntity.badRequest().body("Product not added");
+        }
+        return ResponseEntity.ok("Product added");
     }
 
-    @PostMapping("/addorder/")
-    public boolean addOrderToOrder() {
-        return true;
+    @PostMapping("/addorder")
+    public ResponseEntity<String> addOrderToOrder(@RequestBody Integer id, @RequestBody Integer orderToAddId) {
+        if (!orderService.addOrderToOrder(id, orderToAddId)) {
+            return ResponseEntity.badRequest().body("Order not added");
+        }
+        return ResponseEntity.ok("Order added");
     }
 
-    @GetMapping("/getorder/")
-    public String getOrder(@PathVariable Integer id) {
-        return "Get order";
+    @GetMapping("/get")
+    public ResponseEntity<String> getOrderDetails(@PathVariable Integer id) {
+        if (!orderService.getOrder(id)) {
+            return ResponseEntity.badRequest().body("Order not found");
+        }
+        return ResponseEntity.ok("Order found");
     }
 
-    @PostMapping("/cancelorderplacement/")
-    public boolean cancelOrderPlacement() {
-        return true;
+    @PostMapping("/cancelplacement")
+    public ResponseEntity<String> cancelOrderPlacement(@RequestBody Integer id) {
+        if (!orderService.cancelOrderPlacement(id)) {
+            return ResponseEntity.badRequest().body("Order not cancelled");
+        }
+        return ResponseEntity.ok("Order cancelled");
     }
 
-    @PostMapping("/cancelordershipping/")
-    public boolean cancelOrderShipping() {
-        return true;
+    @PostMapping("/cancelshipping")
+    public ResponseEntity<String> cancelOrderShipping(@RequestBody Integer id) {
+        if (!orderService.cancelOrderShipping(id)) {
+            return ResponseEntity.badRequest().body("Order not cancelled");
+        }
+        return ResponseEntity.ok("Order cancelled");
     }
 
-    @PutMapping("/placeorder/")
-    public boolean placeOrder() {
-        return true;
+    @PutMapping("/place")
+    public ResponseEntity<String> placeOrder(@RequestBody Integer id) {
+        if (!orderService.placeOrder(id)) {
+            return ResponseEntity.badRequest().body("Order not placed");
+        }
+        return ResponseEntity.ok("Order placed");
     }
 
-    @PutMapping("/shiporder/")
-    public boolean shipOrder() {
-        return true;
+    @PutMapping("/ship")
+    public ResponseEntity<String> shipOrder(@RequestBody Integer id) {
+        if (!orderService.shipOrder(id)) {
+            return ResponseEntity.badRequest().body("Order not shipped");
+        }
+        return ResponseEntity.ok("Order shipped");
     }
-
-
-
-
 }

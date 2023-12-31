@@ -6,37 +6,36 @@ import com.app.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
 
-@RequestMapping("/user/")
+@RequestMapping("/user")
 public class UserController {
 
     private UserService userService = UserService.getInstance();
     private Database database = Database.getInstance();
 
-    @PostMapping("/login/")
+    @PostMapping("/login")
     public String login() {
         return "Login";
     }
 
-    @PostMapping("/register/")
+    @PostMapping("/register")
     public ResponseEntity<String> createUser(@RequestBody User user) {
-        //System.out.println("Received User: " + user.toString());
-        userService.createUser(user);
-        return ResponseEntity.status(HttpStatus.CREATED).body("User created successfully");
+        if (!userService.createUser(user)) {
+            return ResponseEntity.badRequest().body("User creation failed");
+        }
+        return ResponseEntity.ok().body("User created successfully");
     }
 
-    @PostMapping("/setchannel/{username}")
+    @PutMapping("/setchannels/{username}")
     public ResponseEntity<String> setChannel(@PathVariable String username, @RequestBody Map<String, Boolean> channels) {
-        // System.out.println("Received Channels: " + channels.toString());
-        userService.setChannel(username, channels);
-        return ResponseEntity.status(HttpStatus.CREATED).body("Channels set successfully");
+        if (!userService.setChannel(username, channels)) {
+            return ResponseEntity.badRequest().body("Channels not set");
+        }
+        return ResponseEntity.ok().body("Channels set successfully");
     }
 
     public HashMap<String, String> generateToken(User user) {
