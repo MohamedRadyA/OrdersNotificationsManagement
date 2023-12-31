@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/info/")
+@RequestMapping("/info")
 public class InformationController {
 
     private InformationService informationService;
@@ -22,12 +22,12 @@ public class InformationController {
         this.informationService = informationService;
     }
 
-    @GetMapping("/getproducts/")
+    @GetMapping("/getproducts")
     public ResponseEntity<ArrayList<Product>> getProducts() {
         return ResponseEntity.ok(informationService.getAllProducts());
     }
 
-    @GetMapping("/getstats/")
+    @GetMapping("/getstats")
     public ResponseEntity<Map<String, Integer>> getStats() {
         return ResponseEntity.ok(informationService.getStatistics());
     }

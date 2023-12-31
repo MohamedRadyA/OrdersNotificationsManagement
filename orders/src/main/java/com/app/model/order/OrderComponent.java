@@ -1,6 +1,4 @@
-package com.app.model;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
+package com.app.model.order;
 
 public interface OrderComponent {
     boolean addChild (OrderComponent component);

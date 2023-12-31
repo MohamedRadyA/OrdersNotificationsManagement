@@ -1,6 +1,6 @@
-package com.app.notifications;
+package com.app.model.notification;
 
-import com.app.notifications.channel.Channel;
+import com.app.model.channel.Channel;
 
 import java.util.Date;
 

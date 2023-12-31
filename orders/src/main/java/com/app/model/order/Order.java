@@ -1,4 +1,4 @@
-package com.app.model;
+package com.app.model.order;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;

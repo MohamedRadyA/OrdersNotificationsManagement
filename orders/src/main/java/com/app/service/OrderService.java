@@ -1,10 +1,10 @@
 package com.app.service;
 
-import com.app.model.Order;
-import com.app.model.OrderState;
-import com.app.model.ProductItem;
+import com.app.model.notification.NotificationTemplate;
+import com.app.model.order.Order;
+import com.app.model.order.OrderState;
+import com.app.model.order.ProductItem;
 import com.app.model.User;
-import com.app.notifications.NotificationManager;
 import com.app.repo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -12,7 +12,10 @@ import org.springframework.stereotype.Service;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.Map;
 import java.util.function.Function;
+
+import static java.util.Map.entry;
 
 @Service
 public class OrderService {
@@ -25,16 +28,18 @@ public class OrderService {
 
     private final InventoryDatabase inventoryDatabase;
 
-    private NotificationManager notificationManager;
+    private final NotificationService notificationService;
 
 
     @Autowired
     public OrderService(@Qualifier("inMemoryOrderDatabase") OrderDatabase orderDatabase,
                         @Qualifier("inMemoryUserDatabase") UserDatabase userDatabase,
-                        @Qualifier("inMemoryInventoryDatabase") InventoryDatabase inventoryDatabase) {
+                        @Qualifier("inMemoryInventoryDatabase") InventoryDatabase inventoryDatabase,
+                        @Qualifier("notificationService") NotificationService notificationService) {
         this.orderDatabase = orderDatabase;
         this.userDatabase = userDatabase;
         this.inventoryDatabase = inventoryDatabase;
+        this.notificationService = notificationService;
     }
 
     public Boolean createNewOrder(String username, String address) {
@@ -141,18 +146,21 @@ public class OrderService {
 
 
     private void placeOrder(Order order) {
+        User user = userDatabase.getUser(order.getBuyerUsername());
         if (order.getState().equals(OrderState.IDLE)) {
             order.setState(OrderState.PLACED);
             order.setPlacementDate(LocalDateTime.now());
-            Double price = order.getPrice();
-            User user = userDatabase.getUser(order.getBuyerUsername());
-            user.subtractBalance(price);
+            user.subtractBalance(order.getPrice());
         }
         for (var item : order.getItems()) {
             if (item instanceof Order) {
                 placeOrder((Order) item);
             }
         }
+        Map<String, String> placeHolders = Map.ofEntries(entry("lang", user.getPreferredLang()),
+                entry("name", user.getUsername()),
+                entry("id", String.valueOf(order.getId())));
+        notificationService.sendNotification(NotificationTemplate.ORDER_PLACEMENT, placeHolders, user);
     }
 
     public Boolean placeOrder(Integer orderId) {
@@ -193,6 +201,11 @@ public class OrderService {
                 shipOrder((Order) item, singleOrderFees);
             }
         }
+        Map<String, String> placeHolders = Map.ofEntries(entry("lang", user.getPreferredLang()),
+                entry("name", user.getUsername()),
+                entry("id", String.valueOf(order.getId())));
+        notificationService.sendNotification(NotificationTemplate.ORDER_SHIPMENT, placeHolders, user);
+
     }
 
     public Boolean shipOrder(Integer orderId) {

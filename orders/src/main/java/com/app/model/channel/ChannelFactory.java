@@ -1,4 +1,4 @@
-package com.app.notifications.channel;
+package com.app.model.channel;
 
 import java.util.HashMap;
 import java.util.Map;

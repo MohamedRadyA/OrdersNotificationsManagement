@@ -1,6 +1,6 @@
 package com.app.model;
 
-import com.app.notifications.channel.Channel;
+import com.app.model.channel.Channel;
 
 public class User {
     private String username;

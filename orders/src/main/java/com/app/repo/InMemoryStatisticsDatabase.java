@@ -1,6 +1,6 @@
 package com.app.repo;
 
-import com.app.notifications.NotificationTemplate;
+import com.app.model.notification.NotificationTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.util.HashMap;

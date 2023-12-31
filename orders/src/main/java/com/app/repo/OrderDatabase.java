@@ -1,7 +1,7 @@
 package com.app.repo;
 
 
-import com.app.model.Order;
+import com.app.model.order.Order;
 import org.springframework.stereotype.Repository;
 
 @Repository

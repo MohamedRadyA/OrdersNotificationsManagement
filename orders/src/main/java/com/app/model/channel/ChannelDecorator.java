@@ -1,7 +1,4 @@
-package com.app.notifications.channel;
-
-import com.app.repo.StatisticsDatabase;
-import org.springframework.beans.factory.annotation.Qualifier;
+package com.app.model.channel;
 
 public class ChannelDecorator implements Channel {
 

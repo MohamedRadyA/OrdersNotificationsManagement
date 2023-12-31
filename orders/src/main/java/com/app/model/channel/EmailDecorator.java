@@ -1,12 +1,12 @@
-package com.app.notifications.channel;
+package com.app.model.channel;
 
-public class SMSDecorator extends ChannelDecorator{
+public class EmailDecorator extends ChannelDecorator{
 
-    public SMSDecorator(Channel wrappee, String address) {
+    public EmailDecorator(Channel wrappee, String address) {
         super(wrappee, address);
     }
 
-    public SMSDecorator() {
+    public EmailDecorator() {
         super(null, null);
     }
 
@@ -15,5 +15,4 @@ public class SMSDecorator extends ChannelDecorator{
         super.send(message);
         // Simulate sending to address
     }
-
 }

@@ -1,4 +1,4 @@
-package com.app.notifications.channel;
+package com.app.model.channel;
 
 public class ConcreteChannel implements Channel{
     @Override

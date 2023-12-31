@@ -2,10 +2,11 @@ package com.app.service;
 
 import com.app.auth.Constants;
 import com.app.model.User;
-import com.app.notifications.channel.Channel;
-import com.app.notifications.channel.ChannelDecorator;
-import com.app.notifications.channel.ChannelFactory;
-import com.app.notifications.channel.ConcreteChannel;
+import com.app.model.channel.Channel;
+import com.app.model.channel.ChannelDecorator;
+import com.app.model.channel.ChannelFactory;
+import com.app.model.channel.ConcreteChannel;
+import com.app.model.notification.NotificationTemplate;
 import com.app.repo.UserDatabase;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -17,14 +18,18 @@ import org.springframework.stereotype.Service;
 import java.util.Date;
 import java.util.Map;
 
+import static java.util.Map.entry;
+
 @Service
 public class UserService {
     private final UserDatabase userDatabase;
-
+    private final NotificationService notificationService;
 
     @Autowired
-    public UserService(@Qualifier("inMemoryUserDatabase")UserDatabase userDatabase) {
+    public UserService(@Qualifier("inMemoryUserDatabase")UserDatabase userDatabase,
+                       @Qualifier("notificationService") NotificationService notificationService) {
         this.userDatabase = userDatabase;
+        this.notificationService = notificationService;
     }
 
 
@@ -33,6 +38,9 @@ public class UserService {
             return false;
         }
         userDatabase.addUser(user);
+        Map<String, String> placeHolders = Map.ofEntries(entry("lang", user.getPreferredLang()),
+                entry("name", user.getUsername()));
+        notificationService.sendNotification(NotificationTemplate.ORDER_SHIPMENT, placeHolders, user);
         return true;
     }
     public Boolean loginUser(User user){
@@ -40,6 +48,9 @@ public class UserService {
             return false;
         }
         User dbUser = userDatabase.getUser(user.getUsername());
+        Map<String, String> placeHolders = Map.ofEntries(entry("lang", user.getPreferredLang()),
+                entry("name", user.getUsername()));
+        notificationService.sendNotification(NotificationTemplate.ORDER_SHIPMENT, placeHolders, user);
         return dbUser.getPassword().equals(user.getPassword());
     }
 
