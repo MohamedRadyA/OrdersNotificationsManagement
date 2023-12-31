@@ -1,6 +1,10 @@
 package com.app.model;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class Product {
+
 
     private String serialNumber;
     private String name;
@@ -10,6 +14,7 @@ public class Product {
 
     private int quantity;
 
+    @JsonCreator
     public Product(String serialNumber) {
         this.serialNumber = serialNumber;
     }

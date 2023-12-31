@@ -44,14 +44,17 @@ public class UserService {
         return true;
     }
     public Boolean loginUser(User user){
-        if (userDatabase.userExists(user.getUsername())) {
+        if (!userDatabase.userExists(user.getUsername())) {
             return false;
         }
         User dbUser = userDatabase.getUser(user.getUsername());
-        Map<String, String> placeHolders = Map.ofEntries(entry("lang", user.getPreferredLang()),
-                entry("name", user.getUsername()));
-        notificationService.sendNotification(NotificationTemplate.ORDER_SHIPMENT, placeHolders, user);
-        return dbUser.getPassword().equals(user.getPassword());
+        if(dbUser.getPassword().equals(user.getPassword())){
+            Map<String, String> placeHolders = Map.ofEntries(entry("lang", user.getPreferredLang()),
+                    entry("name", user.getUsername()));
+            notificationService.sendNotification(NotificationTemplate.ORDER_SHIPMENT, placeHolders, user);
+            return true;
+        }
+        return false;
     }
 
     public Boolean setChannel(String username, Map<String, Boolean> channels) {

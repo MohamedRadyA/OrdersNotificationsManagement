@@ -34,7 +34,7 @@ public class InventoryService {
     public Boolean addProduct(Product product){
         return inventoryDatabase.addProduct(product);
     }
-    public Boolean increaseStock(String serialNo,Integer quantity){
+    public Boolean increaseProductStock(String serialNo, Integer quantity){
         if(quantity < 0)return false;
         return inventoryDatabase.increaseProductStock(serialNo,quantity);
     }

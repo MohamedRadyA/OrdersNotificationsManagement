@@ -19,7 +19,7 @@ public class OrderController {
         this.orderService = orderService;
     }
 
-    //TODO
+
     @PostMapping("/create")
     public ResponseEntity<String> createNewOrder(@RequestBody Map<String, Object> data) {
         String username = (String)data.get("username");
@@ -75,7 +75,7 @@ public class OrderController {
         }
         return ResponseEntity.ok("Order cancelled");
     }
-    
+
     @PutMapping("/place")
     public ResponseEntity<String> placeOrder(@RequestBody Map<String, Object> data) {
         Integer id = (Integer) data.get("id");

@@ -22,7 +22,7 @@ public class UserController {
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody User user) {
         if (!userService.loginUser(user)) {
-            return ResponseEntity.badRequest().body(null);
+            return ResponseEntity.badRequest().body("Login failed");
         }
         return ResponseEntity.ok().body(userService.generateUserToken(user));
     }

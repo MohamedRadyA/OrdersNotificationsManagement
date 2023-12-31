@@ -22,6 +22,7 @@ public class OrdersApplication {
         AuthenticationFilter authenticationFilter = new AuthenticationFilter();
         registrationBean.setFilter(authenticationFilter);
         registrationBean.addUrlPatterns("/order/*");
+        registrationBean.addUrlPatterns("/user/setchannels/{username}");
         return registrationBean;
     }
 }

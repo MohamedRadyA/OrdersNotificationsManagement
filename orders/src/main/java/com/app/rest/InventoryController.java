@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/info")
+@RequestMapping("/inventory")
 public class InventoryController {
 
     private InventoryService inventoryService;
@@ -43,10 +43,10 @@ public class InventoryController {
     }
 
     @PutMapping("/increase")
-    public ResponseEntity<String> increaseStock(@RequestBody Map<String, Object> data) {
+    public ResponseEntity<String> increaseProductStock(@RequestBody Map<String, Object> data) {
         String serialNo = (String) data.get("serialNo");
         Integer quantity = (Integer) data.get("quantity");
-        if (!inventoryService.increaseStock(serialNo,quantity)) {
+        if (!inventoryService.increaseProductStock(serialNo,quantity)) {
             return ResponseEntity.badRequest().body("Stock not increased");
         }
         return ResponseEntity.ok("Stock increased");
