@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.Map;
 import java.util.function.Function;
 
@@ -104,8 +105,8 @@ public class OrderService {
     public Boolean cancelOrderShipping(Integer orderId) {
         Order order = orderDatabase.getOrder(orderId);
         if (order == null || order.getState() != OrderState.SHIPPED || !order.getMainOrder()) return false;
-        Duration duration = Duration.between(order.getPlacementDate(), LocalDateTime.now());
-        if (duration.getSeconds() > MAXIMUM_CANCEL_DURATION) return false;
+        long duration = (order.getPlacementDate().getTime() - System.currentTimeMillis()) / 1000;
+        if (duration > MAXIMUM_CANCEL_DURATION) return false;
 
         Double shipmentFees = getShippingFees(order);
         Integer numberOfOrders = getNumberOfOrders(order);
@@ -149,7 +150,7 @@ public class OrderService {
         User user = userDatabase.getUser(order.getBuyerUsername());
         if (order.getState().equals(OrderState.IDLE)) {
             order.setState(OrderState.PLACED);
-            order.setPlacementDate(LocalDateTime.now());
+            order.setPlacementDate(new Date(System.currentTimeMillis()));
             user.subtractBalance(order.getPrice());
         }
         for (var item : order.getItems()) {
@@ -192,7 +193,7 @@ public class OrderService {
 
     private void shipOrder(Order order, Double singleOrderFees) {
         order.setState(OrderState.SHIPPED);
-        order.setShippingDate(LocalDateTime.now());
+        order.setShippingDate(new Date(System.currentTimeMillis()));
 
         User user = userDatabase.getUser(order.getBuyerUsername());
         user.subtractBalance(singleOrderFees);

@@ -3,19 +3,20 @@ package com.app.model.order;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class Order implements OrderComponent {
     private ArrayList<OrderComponent> items;
     private Integer id;
     private String buyerUsername;
-    private LocalDateTime placementDate;
-    private LocalDateTime shippingDate;
+    private Date placementDate;
+    private Date shippingDate;
     private String shippingAddress;
     private OrderState state;
 
     private Boolean isMainOrder;
 
-    public Order(Integer id, String buyerUsername, LocalDateTime placementDate, LocalDateTime shippingDate, String shippingAddress, OrderState state) {
+    public Order(Integer id, String buyerUsername, Date placementDate, Date shippingDate, String shippingAddress, OrderState state) {
         items = new ArrayList<>();
         this.id = id;
         this.buyerUsername = buyerUsername;
@@ -50,19 +51,19 @@ public class Order implements OrderComponent {
         this.buyerUsername = buyerUsername;
     }
 
-    public LocalDateTime getPlacementDate() {
+    public Date getPlacementDate() {
         return placementDate;
     }
 
-    public void setPlacementDate(LocalDateTime placementDate) {
+    public void setPlacementDate(Date placementDate) {
         this.placementDate = placementDate;
     }
 
-    public LocalDateTime getShippingDate() {
+    public Date getShippingDate() {
         return shippingDate;
     }
 
-    public void setShippingDate(LocalDateTime shippingDate) {
+    public void setShippingDate(Date shippingDate) {
         this.shippingDate = shippingDate;
     }
 
@@ -107,47 +108,6 @@ public class Order implements OrderComponent {
             return true;
         }
         return false;
-    }
-
-    @Override
-    // {["id": id, "buyerUsername": buyerUsername, "placementDate": placementDate, "shippingDate": shippingDate, "items": ["serialNumber": serialNumber, "quantity": quantity]}]]}
-    public String getInformation() {
-        StringBuilder info = new StringBuilder();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-
-        info.append("Order {")
-                .append("id= ").append(id).append(", ")
-                .append("buyerUsername= '").append(buyerUsername).append("', ")
-                .append("placementDate= ").append(placementDate.format(formatter)).append(", ")
-                .append("shippingDate= ").append(shippingDate.format(formatter)).append(", ")
-                .append("shippingAddress= '").append(shippingAddress).append("', ")
-                .append("state= ").append(state).append(", ")
-                .append("items=[");
-
-
-        ArrayList<OrderComponent> sortedItems = new ArrayList<>();
-        for (OrderComponent item : items) {
-            if (item instanceof ProductItem) {
-                sortedItems.add(item);
-            }
-        }
-        for (OrderComponent item : items) {
-            if (item instanceof Order) {
-                sortedItems.add(item);
-            }
-        }
-
-        // Print orders
-        for (int i = 0; i < sortedItems.size(); i++) {
-            info.append("\n ").append(sortedItems.get(i).getInformation());
-            if (i != sortedItems.size() - 1) {
-                info.append(", ");
-            }
-        }
-        if (items.isEmpty())
-            info.append("]}");
-
-        return info.toString();
     }
 
     public Double getPrice() {

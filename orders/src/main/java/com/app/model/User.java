@@ -1,26 +1,35 @@
 package com.app.model;
 
 import com.app.model.channel.Channel;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class User {
+    @JsonProperty("username")
     private String username;
 
+    @JsonProperty("password")
     private String password;
 
     private String phoneNumber;
 
     private String emailAddress;
 
-    private String preferredLang;
+    private String preferredLang = "en";
 
+    @JsonProperty("balance")
     private Double balance;
 
     private Channel channel;
-    public User(String username, String password, Double balance) {
+
+    @JsonCreator
+    public User(String username, String password,Double balance) {
         this.username = username;
         this.password = password;
         this.balance = balance;
     }
+
+
     public User(String username, String password, Double balance, String phoneNumber, String emailAddress, String preferredLang, Channel channel) {
         this(username, password, balance);
         this.phoneNumber = phoneNumber;
