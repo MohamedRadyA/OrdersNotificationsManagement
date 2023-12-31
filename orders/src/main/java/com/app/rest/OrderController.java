@@ -27,7 +27,10 @@ public class OrderController {
     }
 
     @PostMapping("/addproduct")
-    public ResponseEntity<String> addProductToOrder(@RequestBody Integer id, @RequestBody String serialNumber, @RequestBody Integer quantity) {
+    public ResponseEntity<String> addProductToOrder(@RequestBody Map<String, Object> data) {
+        Integer id = (Integer) data.get("id");
+        String serialNumber = (String) data.get("serialNumber");
+        Integer quantity = (Integer) data.get("quantity");
         if (!orderService.addProductToOrder(id, serialNumber, quantity)) {
             return ResponseEntity.badRequest().body("Product not added");
         }
@@ -35,7 +38,9 @@ public class OrderController {
     }
 
     @PostMapping("/addorder")
-    public ResponseEntity<String> addOrderToOrder(@RequestBody Integer id, @RequestBody Integer orderToAddId) {
+    public ResponseEntity<String> addOrderToOrder(@RequestBody Map<String, Object> data) {
+        Integer id = (Integer) data.get("id");
+        Integer orderToAddId = (Integer) data.get("orderToAddId");
         if (!orderService.addOrderToOrder(id, orderToAddId)) {
             return ResponseEntity.badRequest().body("Order not added");
         }

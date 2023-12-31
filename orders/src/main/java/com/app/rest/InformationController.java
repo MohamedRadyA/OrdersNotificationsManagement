@@ -1,10 +1,15 @@
 package com.app.rest;
 
+import com.app.model.Product;
 import com.app.service.InformationService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.ArrayList;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/info/")
@@ -18,12 +23,12 @@ public class InformationController {
     }
 
     @GetMapping("/getproducts/")
-    public String getProducts() {
-        return "List of products";
+    public ResponseEntity<ArrayList<Product>> getProducts() {
+        return ResponseEntity.ok(informationService.getAllProducts());
     }
 
     @GetMapping("/getstats/")
-    public String getStats() {
-        return "Statistics";
+    public ResponseEntity<Map<String, Integer>> getStats() {
+        return ResponseEntity.ok(informationService.getStatistics());
     }
 }

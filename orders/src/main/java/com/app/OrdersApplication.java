@@ -21,7 +21,7 @@ public class OrdersApplication {
         FilterRegistrationBean<AuthenticationFilter> registrationBean = new FilterRegistrationBean<>();
         AuthenticationFilter authenticationFilter = new AuthenticationFilter();
         registrationBean.setFilter(authenticationFilter);
-//        registrationBean.addUrlPatterns("/api/*");
+        registrationBean.addUrlPatterns("/order/*");
         return registrationBean;
     }
 }

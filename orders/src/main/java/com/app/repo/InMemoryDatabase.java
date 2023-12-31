@@ -23,9 +23,8 @@ public class InMemoryDatabase implements Database {
         users = new HashMap<>();
         categoryStock = new HashMap<>();
         orders = new ArrayList<>();
-        emailCounter = new HashMap<>();
+        addressCounter = new HashMap<>();
         templateCounter = new HashMap<>();
-        phoneCounter = new HashMap<>();
     }
 
     @Override
