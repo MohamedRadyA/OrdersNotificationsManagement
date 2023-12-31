@@ -13,12 +13,10 @@ public class InMemoryDatabase implements Database {
 
     private Map<String, Product> products;
     private Map<String, User> users;
-
     private Map<Category, Integer> categoryStock;
     private ArrayList<Order> orders;
-    private Map<String, Integer> emailCounter;
+    private Map<String, Integer> addressCounter;
     private Map<NotificationTemplate, Integer> templateCounter;
-    private Map<String, Integer> phoneCounter;
 
     public InMemoryDatabase() {
         products = new HashMap<>();
@@ -71,7 +69,7 @@ public class InMemoryDatabase implements Database {
         return products.get(serialNo);
     }
 
-    public int getProductStock(String serialNo) {
+    public Integer getProductStock(String serialNo) {
         if(products.containsKey(serialNo)){
             return 0;
         }
@@ -79,7 +77,7 @@ public class InMemoryDatabase implements Database {
     }
 
     @Override
-    public int getNextOrderId() {
+    public Integer getNextOrderId() {
         return orders.size() + 1;
     }
 
@@ -109,6 +107,28 @@ public class InMemoryDatabase implements Database {
     }
 
     public Map<String, Integer> getStatistics() {
-        return null;
+        Map <String, Integer> statistics = new HashMap<>();
+        String mostNotifiedAddress = null;
+        NotificationTemplate mostSentTemplate = null;
+        int mostNotifiedAddressCount = 0, mostSentTemplateCount = 0;
+
+        for (Map.Entry<String, Integer> entry : addressCounter.entrySet()) {
+            if (entry.getValue() > mostNotifiedAddressCount) {
+                mostNotifiedAddressCount = entry.getValue();
+                mostNotifiedAddress = entry.getKey();
+            }
+        }
+
+        for (Map.Entry<NotificationTemplate, Integer> entry : templateCounter.entrySet()) {
+            if (entry.getValue() > mostSentTemplateCount) {
+                mostSentTemplateCount = entry.getValue();
+                mostSentTemplate = entry.getKey();
+            }
+        }
+        if (mostNotifiedAddress != null)
+            statistics.put("mostNotifiedAddress: " + mostNotifiedAddress, mostNotifiedAddressCount);
+        if (mostSentTemplate != null)
+            statistics.put("mostSentTemplate: " + mostSentTemplate, mostSentTemplateCount);
+        return statistics;
     }
 }

@@ -13,15 +13,15 @@ public class User {
 
     private String preferredLang;
 
-    private double balance;
+    private Double balance;
 
     private Channel channel;
-    public User(String username, String password, double balance) {
+    public User(String username, String password, Double balance) {
         this.username = username;
         this.password = password;
         this.balance = balance;
     }
-    public User(String username, String password, double balance, String phoneNumber, String emailAddress, String preferredLang, Channel channel) {
+    public User(String username, String password, Double balance, String phoneNumber, String emailAddress, String preferredLang, Channel channel) {
         this(username, password, balance);
         this.phoneNumber = phoneNumber;
         this.emailAddress = emailAddress;
@@ -49,7 +49,7 @@ public class User {
         this.preferredLang = preferredLang;
     }
 
-    public void setBalance(double balance) {
+    public void setBalance(Double balance) {
         this.balance = balance;
     }
 
@@ -77,7 +77,7 @@ public class User {
         return preferredLang;
     }
 
-    public double getBalance() {
+    public Double getBalance() {
         return balance;
     }
 

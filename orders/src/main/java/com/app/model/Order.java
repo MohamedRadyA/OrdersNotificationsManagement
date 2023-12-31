@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 public class Order implements OrderComponent {
     private ArrayList<OrderComponent> items;
-    private int id;
+    private Integer id;
     private String buyerUsername;
     private LocalDateTime placementDate;
     private LocalDateTime shippingDate;
@@ -15,7 +15,7 @@ public class Order implements OrderComponent {
 
     private Boolean isMainOrder;
 
-    public Order(int id, String buyerUsername, LocalDateTime placementDate, LocalDateTime shippingDate, String shippingAddress, OrderState state) {
+    public Order(Integer id, String buyerUsername, LocalDateTime placementDate, LocalDateTime shippingDate, String shippingAddress, OrderState state) {
         items = new ArrayList<>();
         this.id = id;
         this.buyerUsername = buyerUsername;
@@ -38,7 +38,7 @@ public class Order implements OrderComponent {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -151,7 +151,7 @@ public class Order implements OrderComponent {
     }
 
     public Double getPrice() {
-        double price = 0;
+        Double price = 0.0;
         for (OrderComponent item : items) {
             if (item instanceof ProductItem) {
                 price += item.getPrice();

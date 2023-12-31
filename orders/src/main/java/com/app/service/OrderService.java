@@ -28,12 +28,12 @@ public class OrderService {
     }
 
     public Boolean createNewOrder(String username) {
-        int id = database.getNextOrderId();
+        Integer id = database.getNextOrderId();
         Order newOrder = new Order(id, username, null, null, null, OrderState.IDLE);
         return database.addOrder(newOrder);
     }
 
-    public Boolean addOrderToOrder(int orderId, int orderToAddId) {
+    public Boolean addOrderToOrder(Integer orderId, Integer orderToAddId) {
         Order order = database.getOrder(orderId);
         Order orderToAdd = database.getOrder(orderToAddId);
         if (order == null || orderToAdd == null) return false;
@@ -41,11 +41,11 @@ public class OrderService {
         return true;
     }
 
-    public Boolean addProductToOrder(int orderId, String serialNumber, int quantity) {
+    public Boolean addProductToOrder(Integer orderId, String serialNumber, Integer quantity) {
         if (quantity <= 0) return false;
         Order order = database.getOrder(orderId);
         if (order == null) return false;
-        int stockQuantity = database.getProductStock(serialNumber);
+        Integer stockQuantity = database.getProductStock(serialNumber);
         if (stockQuantity < quantity) return false;
         ProductItem currentProduct = new ProductItem(serialNumber, quantity, database.getProduct(serialNumber).getPrice());
         order.addChild(currentProduct);
@@ -55,7 +55,7 @@ public class OrderService {
     private void cancelOrderPlacement(Order order) {
         order.setState(OrderState.IDLE);
         order.setPlacementDate(null);
-        double price = order.getPrice();
+        Double price = order.getPrice();
         User user = database.getUser(order.getBuyerUsername());
         user.addBalance(price);
         for (var item : order.getItems()) {
@@ -65,7 +65,7 @@ public class OrderService {
         }
     }
 
-    public Boolean cancelOrderPlacement(int orderId) {
+    public Boolean cancelOrderPlacement(Integer orderId) {
         Order order = database.getOrder(orderId);
         if (order == null || order.getState() != OrderState.PLACED || !order.getMainOrder()) return false;
         order.setMainOrder(false);
@@ -73,7 +73,7 @@ public class OrderService {
         return true;
     }
 
-    private void cancelOrderShipping(Order order, double singleOrderFees) {
+    private void cancelOrderShipping(Order order, Double singleOrderFees) {
         order.setState(OrderState.PLACED);
         order.setShippingDate(null);
 
@@ -86,7 +86,7 @@ public class OrderService {
         }
     }
 
-    public Boolean cancelOrderShipping(int orderId) {
+    public Boolean cancelOrderShipping(Integer orderId) {
         Order order = database.getOrder(orderId);
         if (order == null || order.getState() != OrderState.SHIPPED || !order.getMainOrder()) return false;
         Duration duration = Duration.between(order.getPlacementDate(), LocalDateTime.now());
@@ -94,7 +94,7 @@ public class OrderService {
 
         Double shipmentFees = getShippingFees(order);
         Integer numberOfOrders = getNumberOfOrders(order);
-        double singleOrderFees = shipmentFees / numberOfOrders;
+        Double singleOrderFees = shipmentFees / numberOfOrders;
 
         cancelOrderShipping(order, singleOrderFees);
         return true;
@@ -134,7 +134,7 @@ public class OrderService {
         if (order.getState().equals(OrderState.IDLE)) {
             order.setState(OrderState.PLACED);
             order.setPlacementDate(LocalDateTime.now());
-            double price = order.getPrice();
+            Double price = order.getPrice();
             User user = database.getUser(order.getBuyerUsername());
             user.subtractBalance(price);
         }
@@ -145,7 +145,7 @@ public class OrderService {
         }
     }
 
-    public Boolean placeOrder(int orderId) {
+    public Boolean placeOrder(Integer orderId) {
         Order order = database.getOrder(orderId);
         if (order == null) return false;
 
@@ -172,7 +172,7 @@ public class OrderService {
         return cnt;
     }
 
-    private void shipOrder(Order order, double singleOrderFees) {
+    private void shipOrder(Order order, Double singleOrderFees) {
         order.setState(OrderState.SHIPPED);
         order.setShippingDate(LocalDateTime.now());
 
@@ -185,7 +185,7 @@ public class OrderService {
         }
     }
 
-    public Boolean shipOrder(int orderId) {
+    public Boolean shipOrder(Integer orderId) {
         Order order = database.getOrder(orderId);
         if (order == null) return false;
 
@@ -194,7 +194,7 @@ public class OrderService {
 
         Double shipmentFees = getShippingFees(order);
         Integer numberOfOrders = getNumberOfOrders(order);
-        double singleOrderFees = shipmentFees / numberOfOrders;
+        Double singleOrderFees = shipmentFees / numberOfOrders;
 
         Function<Order, Double> function = x -> singleOrderFees;
         if (!verifyUsersBalance(order, function))
@@ -203,7 +203,7 @@ public class OrderService {
         return true;
     }
 
-    public Order getOrderDetails(int orderId) {
+    public Order getOrderDetails(Integer orderId) {
         return database.getOrder(orderId);
     }
 }

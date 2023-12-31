@@ -17,9 +17,9 @@ public interface Database {
     Product getProduct(String serialNo);
 
 
-    int getNextOrderId();
+    Integer getNextOrderId();
 
-    int getProductStock(String serialNo);
+    Integer getProductStock(String serialNo);
 
     ArrayList<Product> getAllProducts();
 

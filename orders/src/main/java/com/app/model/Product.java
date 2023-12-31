@@ -6,7 +6,7 @@ public class Product {
     private String name;
     private String vendor;
     private Category category;
-    private double price;
+    private Double price;
 
     private int quantity;
 
@@ -50,15 +50,15 @@ public class Product {
         return price;
     }
 
-    public void setPrice(double price) {
+    public void setPrice(Double price) {
         this.price = price;
     }
 
-    public int getQuantity() {
+    public Integer getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(int quantity) {
+    public void setQuantity(Integer quantity) {
         this.quantity = quantity;
     }
 }

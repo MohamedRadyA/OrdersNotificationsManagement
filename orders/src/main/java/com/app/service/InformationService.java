@@ -14,16 +14,17 @@ import java.util.Map;
 public class InformationService {
 
     private final Database database;
+
     @Autowired
-    public InformationService(@Qualifier("inMemoryDatabase")Database database) {
+    public InformationService(@Qualifier("inMemoryDatabase") Database database) {
         this.database = database;
     }
 
-    public ArrayList<Product> getAllProducts(){
+    public ArrayList<Product> getAllProducts() {
         return database.getAllProducts();
     }
 
-    public Map<String, Integer>getStatistics(){
+    public Map<String, Integer> getStatistics() {
         return database.getStatistics();
     }
 }

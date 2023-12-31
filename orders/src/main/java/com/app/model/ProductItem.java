@@ -6,11 +6,11 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 
 public class ProductItem implements OrderComponent {
     private String serialNumber;
-    private int quantity;
+    private Integer quantity;
 
     private final Double price;
 
-    public ProductItem(String serialNumber, int quantity, Double price) {
+    public ProductItem(String serialNumber, Integer quantity, Double price) {
         this.serialNumber = serialNumber;
         this.quantity = quantity;
         this.price = price;
@@ -20,7 +20,7 @@ public class ProductItem implements OrderComponent {
         this.serialNumber = serialNumber;
     }
 
-    public void setQuantity(int quantity) {
+    public void setQuantity(Integer quantity) {
         this.quantity = quantity;
     }
 
@@ -28,7 +28,7 @@ public class ProductItem implements OrderComponent {
         return serialNumber;
     }
 
-    public int getQuantity() {
+    public Integer getQuantity() {
         return quantity;
     }
 
