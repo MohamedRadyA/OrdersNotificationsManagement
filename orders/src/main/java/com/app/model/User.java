@@ -84,4 +84,17 @@ public class User {
     public Channel getChannel() {
         return channel;
     }
+
+    public Boolean addBalance(double add){
+        balance += add;
+        return true;
+    }
+
+    public Boolean subtractBalance(double subtract){
+        if(balance < subtract){
+            return false;
+        }
+        balance -= subtract;
+        return true;
+    }
 }

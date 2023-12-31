@@ -1,34 +1,28 @@
 package com.app.service;
 
 import com.app.model.User;
+import com.app.notifications.*;
 import com.app.repo.Database;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
 
 
-import java.nio.channels.Channel;
 import java.util.Map;
 
+@Service
 public class UserService {
     private final Database database;
-    private static UserService instance;
 
 
-    private UserService() {
-        database = Database.getInstance();
+    @Autowired
+    public UserService(@Qualifier("inMemoryDatabase")Database database) {
+        this.database = database;
     }
-/*
-    public Boolean createUser(String username, String password, double balance) {
-        if (database.userExist(username)) {
-            return false;
-        }
-        User user = new User(username, password, balance);
-        database.addUser(user);
-        return true;
-    }
-*/
-    //TODO: Check if the above method is needed or not
+
 
     public Boolean createUser(User user) {
-        if (database.userExist(user.getUsername())) {
+        if (database.userExists(user.getUsername())) {
             return false;
         }
         database.addUser(user);
@@ -36,20 +30,19 @@ public class UserService {
     }
 
     public Boolean setChannel(String username, Map<String, Boolean> channels) {
-        if (!database.userExist(username)) {
+        if (!database.userExists(username)) {
             return false;
         }
-        Channel channel = new concreteChannel();
+        Channel channel = new ConcreteChannel();
         for (var entry : channels.entrySet()) {
-            if (entry.getValue() == false) continue;
-            Channel tmpChannel = ChannelFactory.createChannel(entry);
+            if (!entry.getValue()) continue;
+            ChannelDecorator tmpChannel = (ChannelDecorator) ChannelFactory.createChannel(entry.getKey());
             if(tmpChannel == null)continue;
             tmpChannel.setWrappee(channel);
             channel = tmpChannel;
         }
-        User user = getUserByUsername(username);
+        User user = database.getUser(username);
         user.setChannel(channel);
-        database.updateUser(user);
         return true;
     }
 }

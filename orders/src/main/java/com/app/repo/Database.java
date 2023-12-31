@@ -1,10 +1,12 @@
 package com.app.repo;
 
 import com.app.model.*;
+import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.Map;
 
+@Repository
 public interface Database {
     Boolean addOrder(Order order);
 
@@ -23,9 +25,6 @@ public interface Database {
 
     Map<String, Integer>getStatistics();
 
-    static Database getInstance() {
-        return null;
-    }
 
     Boolean userExists(String username);
 
@@ -36,7 +35,6 @@ public interface Database {
     User getUser(String username);
 
     Boolean updateUser(String username, User user);
-
 
 
 }

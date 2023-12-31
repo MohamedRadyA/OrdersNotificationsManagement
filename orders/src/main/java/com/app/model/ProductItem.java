@@ -8,9 +8,12 @@ public class ProductItem implements OrderComponent {
     private String serialNumber;
     private int quantity;
 
-    public ProductItem(String serialNumber, int quantity) {
+    private final Double price;
+
+    public ProductItem(String serialNumber, int quantity, Double price) {
         this.serialNumber = serialNumber;
         this.quantity = quantity;
+        this.price = price;
     }
 
     public void setSerialNumber(String serialNumber) {
@@ -45,5 +48,10 @@ public class ProductItem implements OrderComponent {
                 "serialNumber= '" + getSerialNumber() + '\'' +
                 ", quantity= " + getQuantity() +
                 '}';
+    }
+
+    @Override
+    public Double getPrice() {
+        return price * quantity;
     }
 }

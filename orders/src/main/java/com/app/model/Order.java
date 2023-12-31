@@ -3,8 +3,6 @@ package com.app.model;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
 
 public class Order implements OrderComponent {
     private ArrayList<OrderComponent> items;
@@ -15,6 +13,8 @@ public class Order implements OrderComponent {
     private String shippingAddress;
     private OrderState state;
 
+    private Boolean isMainOrder;
+
     public Order(int id, String buyerUsername, LocalDateTime placementDate, LocalDateTime shippingDate, String shippingAddress, OrderState state) {
         items = new ArrayList<>();
         this.id = id;
@@ -23,58 +23,71 @@ public class Order implements OrderComponent {
         this.shippingDate = shippingDate;
         this.shippingAddress = shippingAddress;
         this.state = state;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public void setBuyerUsername(String buyerUsername) {
-        this.buyerUsername = buyerUsername;
-    }
-
-    public void setPlacementDate(LocalDateTime placementDate) {
-        this.placementDate = placementDate;
-    }
-
-    public void setShippingDate(LocalDateTime shippingDate) {
-        this.shippingDate = shippingDate;
-    }
-
-    public void setShippingAddress(String shippingAddress) {
-        this.shippingAddress = shippingAddress;
-    }
-
-    public void setState(OrderState state) {
-        this.state = state;
+        this.isMainOrder = false;
     }
 
     public ArrayList<OrderComponent> getItems() {
         return items;
     }
 
+    public void setItems(ArrayList<OrderComponent> items) {
+        this.items = items;
+    }
+
     public int getId() {
         return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getBuyerUsername() {
         return buyerUsername;
     }
 
+    public void setBuyerUsername(String buyerUsername) {
+        this.buyerUsername = buyerUsername;
+    }
+
     public LocalDateTime getPlacementDate() {
         return placementDate;
+    }
+
+    public void setPlacementDate(LocalDateTime placementDate) {
+        this.placementDate = placementDate;
     }
 
     public LocalDateTime getShippingDate() {
         return shippingDate;
     }
 
+    public void setShippingDate(LocalDateTime shippingDate) {
+        this.shippingDate = shippingDate;
+    }
+
     public String getShippingAddress() {
         return shippingAddress;
     }
 
+    public void setShippingAddress(String shippingAddress) {
+        this.shippingAddress = shippingAddress;
+    }
+
     public OrderState getState() {
         return state;
+    }
+
+    public void setState(OrderState state) {
+        this.state = state;
+    }
+
+    public Boolean getMainOrder() {
+        return isMainOrder;
+    }
+
+    public void setMainOrder(Boolean mainOrder) {
+        isMainOrder = mainOrder;
     }
 
     @Override
@@ -137,12 +150,15 @@ public class Order implements OrderComponent {
         return info.toString();
     }
 
-/*    public double getPrice() {
+    public Double getPrice() {
         double price = 0;
         for (OrderComponent item : items) {
-            price += item.getPrice();
+            if (item instanceof ProductItem) {
+                price += item.getPrice();
+            }
         }
         return price;
-    }*/
+    }
+
 }
 

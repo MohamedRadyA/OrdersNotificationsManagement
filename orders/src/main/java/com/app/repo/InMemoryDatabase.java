@@ -1,25 +1,34 @@
 package com.app.repo;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 import com.app.model.*;
 import com.app.notifications.NotificationTemplate;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public class InMemoryDatabase implements Database {
 
     private Map<String, Product> products;
     private Map<String, User> users;
 
-
-    private Map<String, Integer> productStock;
     private Map<Category, Integer> categoryStock;
     private ArrayList<Order> orders;
     private Map<String, Integer> emailCounter;
     private Map<NotificationTemplate, Integer> templateCounter;
     private Map<String, Integer> phoneCounter;
 
-    private static InMemoryDatabase database;
+    public InMemoryDatabase() {
+        products = new HashMap<>();
+        users = new HashMap<>();
+        categoryStock = new HashMap<>();
+        orders = new ArrayList<>();
+        emailCounter = new HashMap<>();
+        templateCounter = new HashMap<>();
+        phoneCounter = new HashMap<>();
+    }
 
     @Override
 
@@ -28,11 +37,22 @@ public class InMemoryDatabase implements Database {
         return true;
     }
 
-    @Override
+    // Update stock
+//    @Override
+//    public Boolean addProduct(Product product) {
+//        String serialNo = product.getSerialNumber();
+//        products.put(serialNo, product);
+//        productStock.put(serialNo, productStock.getOrDefault(serialNo, 0) + 1);
+//        return true;
+//    }
+
+        @Override
     public Boolean addProduct(Product product) {
         String serialNo = product.getSerialNumber();
+        if(products.containsKey(serialNo)){
+            return false;
+        }
         products.put(serialNo, product);
-        productStock.put(serialNo, productStock.getOrDefault(serialNo, 0) + 1);
         return true;
     }
 
@@ -48,14 +68,14 @@ public class InMemoryDatabase implements Database {
 
     @Override
     public Product getProduct(String serialNo) {
-        if (products.containsKey(serialNo)) {
-            return products.get(serialNo);
-        }
-        return null;
+        return products.get(serialNo);
     }
 
     public int getProductStock(String serialNo) {
-        return productStock.getOrDefault(productStock.get(serialNo), 0);
+        if(products.containsKey(serialNo)){
+            return 0;
+        }
+        return products.get(serialNo).getQuantity();
     }
 
     @Override
@@ -65,14 +85,7 @@ public class InMemoryDatabase implements Database {
 
     @Override
     public ArrayList<Product> getAllProducts() {
-        ArrayList<Product> productArrayList = new ArrayList<Product>(products.values());
-        return productArrayList;
-    }
-
-    public static Database getInstance() {
-        if (database == null)
-            database = new InMemoryDatabase();
-        return database;
+        return new ArrayList<>(products.values());
     }
 
     @Override

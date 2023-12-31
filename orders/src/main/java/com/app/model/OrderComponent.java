@@ -7,4 +7,6 @@ public interface OrderComponent {
     boolean removeChild (OrderComponent component);
 
     String getInformation ();
+
+    Double getPrice();
 }
