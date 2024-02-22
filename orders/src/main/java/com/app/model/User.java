@@ -6,10 +6,9 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class User {
-    @JsonProperty("username")
+
     private String username;
 
-    @JsonProperty("password")
     private String password;
 
     private String phoneNumber;
@@ -18,12 +17,15 @@ public class User {
 
     private String preferredLang;
 
-    @JsonProperty("balance")
     private Double balance;
 
     private Channel channel;
 
-    @JsonCreator
+
+    public User(){
+
+    }
+
     public User(String username, String password, Double balance) {
         this.username = username;
         this.password = password;
