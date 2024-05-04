@@ -4,19 +4,17 @@ Our Order and Notification Management System, built with Java Spring Boot and ad
 
 ## Features
 
-- **Product Catalog:** Access a detailed list of all products, including information like serial number, name, category, vendor, price, and stock levels.
+- **Product Catalog**: The system hosts a comprehensive product catalog that includes detailed information such as serial number, name, category, vendor, price, and current stock levels.
 
-- **Customer Accounts:** Easily create accounts with customizable balance options for hassle-free online shopping.
+- **Inventory Management**: Provides capabilities for users to access a full list of products or details about specific items. It includes functionalities for adding new products to the inventory and updating existing items, ensuring that stock levels are maintained accurately.
 
-- **Order Flexibility:** Place orders for yourself or as gifts for friends with the option to combine products in a single transaction.
+- **Dynamic User Interaction**: The platform supports user functionalities including account registration and login. It also allows users to set and customize their notification preferences, choosing how they receive updates such as via email or SMS.
 
-- **Transparent Fees:** Get detailed breakdowns of service and shipping fees with every order for clear and straightforward pricing.
+- **Sophisticated Order Processing**: The system facilitates the creation of new orders, addition of products to existing orders, and even the combination of multiple orders into a single transaction. It provides detailed tracking of each order's progress and offers flexible management options such as the ability to cancel order placements or shipping.
 
-- **Order Tracking:** Stay updated on your order's progress, from placement through to delivery, with comprehensive status tracking.
+- **Real-Time Analytics**: Stakeholders have access to real-time analytics that deliver insights into the system’s performance, including data on users, products, and orders.
 
-- **Notification System:** Receive timely updates about your order, including confirmations, payment receipts, and shipping notifications.
-
-- **Custom Notifications:** Enjoy personalized notification messages tailored to different scenarios and preferences, ensuring relevant and engaging communication.
+- **Notification System**: The system is equipped with a comprehensive notification mechanism that sends timely updates concerning the status of orders, including confirmations, payment receipts, and notifications of shipment.
 
 --- 
 
